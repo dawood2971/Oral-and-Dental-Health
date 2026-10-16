@@ -1,5 +1,6 @@
+import { execFileSync } from 'node:child_process';
 // Builds the static interactive page «ابتسامتي صحتي» for GitHub Pages.
-// usage: node build-site.mjs <library-out-dir> <site-dir> [<project-materials-dir>]
+// usage: node build-site.mjs <library-out-dir> <site-dir> [<project-materials-dir>] [<extra-videos-dir>]
 import * as A from './art.mjs';
 import { CREDIT } from './render.mjs';
 import { IC, TOPICS, MINI } from './lib-content.mjs';
@@ -92,11 +93,22 @@ const sOrder = block('injury', inj.vars, `${H('', 'فريق الإسعاف ال�
 // 2. media library
 const ALL = [...TOPICS, ...MINI];
 const igGallery = TOPICS.map(t => `<figure class="ig"><a href="assets/${t.slug}/infographic.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/infographic.png" alt="إنفوجرافيك: ${t.title}"></a><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/infographic.png" download>⬇ صورة</a><a class="sbtn" href="assets/${t.slug}/infographic-pdf.pdf" download>⬇ PDF</a><button class="sbtn share" data-url="assets/${t.slug}/infographic.png" data-title="${t.title}">↗ مشاركة</button></span></figcaption></figure>`).join('');
+const EXTRA_DIR = process.argv[5] || '/mnt/project-files/library/moph';
+const EXTRA = [
+  { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
+  { slug: 'role-model', file: 'video-11-be-a-role-model.mp4', title: 'كن قدوة لأطفالك', who: 'للأسر' },
+].filter(v => fs.existsSync(`${EXTRA_DIR}/${v.file}`));
+for (const v of EXTRA) {
+  fs.mkdirSync(`${SITE}/assets/${v.slug}`, { recursive: true });
+  fs.copyFileSync(`${EXTRA_DIR}/${v.file}`, `${SITE}/assets/${v.slug}/video.mp4`);
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', '1.5', '-i', `${EXTRA_DIR}/${v.file}`, '-frames:v', '1', '-vf', 'scale=960:-2', '-q:v', '3', `${SITE}/assets/${v.slug}/cover.jpg`]);
+}
+const vidsWide = EXTRA.map(v => `<figure class="vd wide"><video controls preload="none" playsinline poster="assets/${v.slug}/cover.jpg" src="assets/${v.slug}/video.mp4"></video><figcaption><b>${v.title}</b><span class="who">${v.who}</span><span class="acts"><a class="sbtn" href="assets/${v.slug}/video.mp4" download>⬇ MP4</a></span></figcaption></figure>`).join('');
 const vids = [...MINI, ...TOPICS].map(t => `<figure class="vd"><video controls preload="none" playsinline poster="assets/${t.slug}/cover.jpg" src="assets/${t.slug}/video.mp4"></video><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/video.mp4" download>⬇ MP4</a><a class="sbtn" href="assets/${t.slug}/script.pdf" download>⬇ السيناريو</a></span></figcaption></figure>`).join('');
 const posters = TOPICS.map(t => `<figure class="ps"><a href="assets/${t.slug}/poster.pdf" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/poster-img.png" alt="ملصق: ${t.title}"></a><figcaption><b>${t.title}</b><a class="sbtn" href="assets/${t.slug}/poster.pdf" download>⬇ PDF للطباعة</a></figcaption></figure>`).join('');
 const sLib = `<div class="tabs" role="tablist"><button role="tab" class="tab on" data-tab="tabIg" aria-selected="true">معرض الإنفوجرافيك</button><button role="tab" class="tab" data-tab="tabVd" aria-selected="false">استوديو الفيديو</button><button role="tab" class="tab" data-tab="tabPs" aria-selected="false">ركن الملصقات</button></div>
 <div class="tabp" id="tabIg"><div class="ig-grid">${igGallery}</div></div>
-<div class="tabp" id="tabVd" hidden><div class="vd-grid">${vids}</div></div>
+<div class="tabp" id="tabVd" hidden>${vidsWide ? `<h3 class="ph3">فيديوهات توعوية</h3><div class="vd-wide">${vidsWide}</div><h3 class="ph3">فيديوهات الموضوعات</h3>` : ''}<div class="vd-grid">${vids}</div></div>
 <div class="tabp" id="tabPs" hidden><div class="ps-grid">${posters}</div><div class="more-print"><b>مواد إضافية للطباعة:</b><a class="sbtn" href="assets/print/wall-posters.pdf" download>⬇ ملصقات الحائط</a><a class="sbtn" href="assets/print/coloring-book.pdf" download>⬇ دفتر التلوين: سالم وحمد</a><a class="sbtn" href="assets/print/stickers.pdf" download>⬇ ملصقات الطلاب</a></div></div>`;
 
 // 3. workshops hub

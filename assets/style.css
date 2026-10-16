@@ -250,3 +250,6 @@ details{margin-top:6px}summary{cursor:pointer;font-family:var(--f);font-weight:7
 footer{font-size:var(--t-s)}
 .hero h1,.sh h2,.part-h h2,.cq h3,.st-txt h3,.ph3{line-height:1.5}
 .hero h1{margin:4px 0 10px}.sh h2{margin:6px 0 2px}
+.vd-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px;margin-bottom:8px}
+.vd.wide video{aspect-ratio:16/9}
+.vd .who{align-self:flex-start;font-size:var(--t-xs);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:0 10px}
