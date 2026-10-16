@@ -164,8 +164,7 @@ const page = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-
 <link rel="stylesheet" href="assets/style.css"></head><body>
 <a class="skip" href="#games">انتقل إلى المحتوى</a>
 <div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
-<header class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1><p>تعلّم مع سالم وحمد وصديقهما سنّون كيف تحمي أسنانك: العب، واختبر نفسك، وتابع عاداتك، وحمّل الملصقات والفيديوهات.</p>
-<div class="aud"><span>👦 للطلاب: الألعاب والتحديات والقصص</span><span>🧑‍🏫 للمعلمين والممرضين: العروض والأدلة</span><span>👨‍👩‍👦 للأسر: الأسئلة الشائعة والجدول المنزلي</span></div></div>
+<header class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1></div>
 <div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></header>
 <nav class="toc" aria-label="أقسام الصفحة">${NAV.map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>
 <main>
