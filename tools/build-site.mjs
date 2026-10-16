@@ -12,7 +12,6 @@ A.setMode('color');
 const [LIB, SITE, MAT] = [process.argv[2] || '../out', process.argv[3] || '../site', process.argv[4] || '/mnt/project-files/materials'];
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const cp = (a, b) => { if (fs.existsSync(a)) { fs.mkdirSync(path.dirname(b), { recursive: true }); fs.copyFileSync(a, b); return true; } console.warn('missing', a); return false; };
-for (const [a, b] of [['Cairo.ttf', 'Cairo.ttf'], ['Tajawal-Regular.ttf.ttf', 'Tajawal-Regular.ttf'], ['Tajawal-Bold.ttf.ttf', 'Tajawal-Bold.ttf'], ['Lalezar-Regular.ttf.ttf', 'Lalezar.ttf']]) cp(`${HERE}/../fonts/${a}`, `${SITE}/assets/fonts/${b}`);
 cp(`${HERE}/../fonts/letterhead.jpg`, `${SITE}/assets/letterhead.jpg`);
 
 // ---------- copy library files ----------
@@ -161,6 +160,7 @@ const DATA = {
 const page = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ابتسامتي صحتي</title><meta name="description" content="صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر">
 <meta property="og:title" content="ابتسامتي صحتي"><meta property="og:description" content="ألعاب واختبارات ومكتبة توعوية عن صحة الفم والأسنان"><meta property="og:image" content="assets/habits/infographic.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap">
 <link rel="stylesheet" href="assets/style.css"></head><body>
 <a class="skip" href="#games">انتقل إلى المحتوى</a>
 <div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
@@ -175,9 +175,9 @@ ${part('workshops', '3', 'دليل الجلسات التوعوية والورش'
 ${part('mouth', '4', 'خريطة الفم والأسئلة الشائعة', 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', sMap + `<h3 class="ph3">❓ اسأل الطبيب: الأسئلة الشائعة</h3>` + sFaq, 'mo')}
 ${part('tracker', '5', 'التحديات وحساب العادات', 'تحدّي 28 يوماً للتفريش صباحاً ومساءً، ثم شهادتك', sTrack, 'tr')}
 </main>
-<footer><p>${CREDIT}</p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026 · بعض المحتوى مقتبس بتصرّف من مواد توعوية لوزارة الصحة العامة بدولة قطر</p></footer>
+<footer><p>${CREDIT}</p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
 <script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script></body></html>`;
-fs.writeFileSync(`${SITE}/index.html`, page);
+fs.writeFileSync(`${SITE}/index.html`, page.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`));
 cp(`${HERE}/site-style.css`, `${SITE}/assets/style.css`);
 cp(`${HERE}/site-app.js`, `${SITE}/assets/app.js`);
 fs.writeFileSync(`${SITE}/.nojekyll`, '');

@@ -204,7 +204,7 @@
   const load = src => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
   const cv = $('#cCanvas'), c2 = cv.getContext('2d');
   const drawCert = async () => {
-    await Promise.all(['900 60px Cairo', '400 60px Lalezar', '700 30px Cairo'].map(f => document.fonts.load(f).catch(() => { })));
+    await Promise.all(['700 60px "Times New Roman"', '700 60px Amiri', '400 30px Amiri'].map(f => document.fonts.load(f).catch(() => { })));
     const [lh, sl, to] = await Promise.all([load('assets/letterhead.jpg'), load(D.salem), load(D.tooth)]);
     const W = cv.width, Hh = cv.height, name = $('#cName').value.trim() || '..................', grade = $('#cGrade').value, school = $('#cSchool').value.trim(), green = paint();
     c2.fillStyle = '#fffaf0'; c2.fillRect(0, 0, W, Hh);
@@ -214,14 +214,14 @@
     if (sl) c2.drawImage(sl, 85, 760, 160, 291);
     if (to) c2.drawImage(to, W - 310, 830, 200, 200);
     c2.direction = 'rtl'; c2.textAlign = 'center'; c2.fillStyle = '#1d1d1f';
-    c2.font = '400 104px Lalezar, Cairo'; c2.lineWidth = 10; c2.strokeStyle = '#1d1d1f'; c2.strokeText('شهادة بطل الأسنان النظيفة', W / 2, 360, 1080); c2.fillStyle = '#ffd23f'; c2.fillText('شهادة بطل الأسنان النظيفة', W / 2, 360, 1080);
-    c2.fillStyle = '#1d1d1f'; c2.font = '700 40px Cairo'; c2.fillText('يسرّ قسم تعزيز الصحة وبرنامج الصحة المدرسية والجامعية منح الطالب', W / 2, 460, 1080);
-    c2.font = '900 84px Cairo'; c2.fillStyle = '#1f6fb2'; c2.fillText(name, W / 2, 580, 1080);
-    c2.fillStyle = '#1d1d1f'; c2.font = '700 40px Cairo'; c2.fillText(`الصف ${grade}${school ? ' · ' + school : ''}`, W / 2, 650, 1080);
+    c2.font = '700 104px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#1f6fb2'; c2.fillText('شهادة بطل الأسنان النظيفة', W / 2, 360, 1080);
+    c2.fillStyle = '#1d1d1f'; c2.font = '700 40px "Times New Roman", Times, Amiri, serif'; c2.fillText('يسرّ قسم تعزيز الصحة وبرنامج الصحة المدرسية والجامعية منح الطالب', W / 2, 460, 1080);
+    c2.font = '700 84px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#1f6fb2'; c2.fillText(name, W / 2, 580, 1080);
+    c2.fillStyle = '#1d1d1f'; c2.font = '700 40px "Times New Roman", Times, Amiri, serif'; c2.fillText(`الصف ${grade}${school ? ' · ' + school : ''}`, W / 2, 650, 1080);
     c2.fillText('هذه الشهادة تقديراً لالتزامه بتفريش أسنانه صباحاً ومساءً', W / 2, 730, 1080);
-    c2.font = '900 46px Cairo'; c2.fillStyle = '#2a9d8f'; c2.fillText(`جمع ${green} سنّاً أخضر من 56 في تحدّي الأسابيع الأربعة`, W / 2, 810, 1080);
-    c2.fillStyle = '#1d1d1f'; c2.font = '700 30px Cairo'; c2.fillText('توقيع ولي الأمر: ................        الممرض المدرسي: ................', W / 2, 920, 1080);
-    c2.font = '700 26px Cairo'; c2.fillStyle = '#4a5560'; c2.fillText(D.credit, W / 2, 1040, 1080);
+    c2.font = '700 46px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#2a9d8f'; c2.fillText(`جمع ${green} سنّاً أخضر من 56 في تحدّي الأسابيع الأربعة`, W / 2, 810, 1080);
+    c2.fillStyle = '#1d1d1f'; c2.font = '700 30px "Times New Roman", Times, Amiri, serif'; c2.fillText('توقيع ولي الأمر: ................        الممرض المدرسي: ................', W / 2, 920, 1080);
+    c2.font = '700 26px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#4a5560'; c2.fillText(D.credit, W / 2, 1040, 1080);
   };
   drawCert();
   $('#cMake').onclick = async () => {

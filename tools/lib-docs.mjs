@@ -55,7 +55,7 @@ function guideDoc() {
    <svg viewBox="0 0 700 500" style="width:150mm;margin:8mm auto 0">${g(470, 480, 1.2, A.boy({ mouth: 'grin', r: [[60, -212], [104, -262], [114, -330]] }))}${g(230, 480, 1.2, A.friend({ mouth: 'smile', l: [[-60, -206], [-104, -256], [-116, -322]] }))}${g(350, 150, 0.9, A.tooth({ mouth: 'grin', sparkle: true, arms: true }))}</svg>
    <div class="dp"><table class="sb" style="font-size:11pt"><tr><th>النشاط</th><th>الموضوع</th><th>يُضاف إلى</th><th>المدة</th></tr>
    ${TOPICS.map(t => `<tr><td><b>${ACT[t.slug].name}</b></td><td>${t.short}</td><td>${ACT[t.slug].sessions.map(n => SESSION_NAMES[n].split(':')[0]).join(' و')}</td><td>${ACT[t.slug].time}</td></tr>`).join('')}</table>
-   <p style="font-size:10.5pt;margin-top:3mm;line-height:1.6">كل نشاط يرافقه ملصق وإنفوجرافيك وفيديو قصير في مجلد الموضوع نفسه، وشريحتان في ملف «شرائح إضافية للجلسات». المحتوى مقتبس بتصرّف من مواد توعوية لوزارة الصحة العامة بدولة قطر، وأعيدت صياغته ليناسب طلاب مدارس الذكور في سلطنة عُمان.</p></div>
+   <p style="font-size:10.5pt;margin-top:3mm;line-height:1.6">كل نشاط يرافقه ملصق وإنفوجرافيك وفيديو قصير في مجلد الموضوع نفسه، وشريحتان في ملف «شرائح إضافية للجلسات». المحتوى مُعدّ ليناسب طلاب مدارس الذكور في سلطنة عُمان.</p></div>
    <div class="dft">${CREDIT}</div></div>`;
   const pages = TOPICS.map(t => {
     const a = ACT[t.slug];
