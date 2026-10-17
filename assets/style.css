@@ -310,3 +310,4 @@ footer .staff{color:#fff;opacity:.8}.hgrid{grid-template-columns:repeat(auto-fit
 .hgrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
 .dlt table{table-layout:fixed}.dlt th:nth-child(1){width:50%}.dlt th:nth-child(2){width:22%}.dlt th:nth-child(3){width:14%}.dlt th:nth-child(4){width:14%}.dlt td:last-child{width:auto;text-align:left}@media (max-width:600px){.dlt th:nth-child(1){width:58%}.dlt th:nth-child(3){width:20%}.dlt th:nth-child(4){width:22%}}
 .wk:only-child{width:100%;max-width:440px;margin-inline:auto}
+.hero-art.hero-pic{flex:0 1 480px;height:auto;align-items:center}.hero-pic img{display:block;width:100%;height:auto}

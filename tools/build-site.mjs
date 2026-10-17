@@ -207,7 +207,7 @@ const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="t
 const home = `${HEAD('صحة الفم والأسنان', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
 <main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>صحة الفم والأسنان</h1>
 <div class="hero-cta"><a class="btn" href="games.html">ابدأ اللعب</a><a class="btn ghost" href="challenge.html">تحدّي التفريش</a></div></div>
-<div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></section>
+<div class="hero-art hero-pic"><img src="assets/characters/salem-hamad.webp" width="800" height="593" alt="سالم وحمد يذاكران معاً على الطاولة"></div></section>
 <section class="hgroup" id="students"><div class="hgrid">${PAGES.filter(p => !p.hidden).map(card).join('')}</div></section>
 </main>${FOOT}`;
 fs.writeFileSync(`${SITE}/index.html`, fix(home));
