@@ -220,7 +220,7 @@
     c2.font = '700 84px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#1f6fb2'; c2.fillText(name, W / 2, 580, 1080);
     c2.fillStyle = '#1d1d1f'; c2.font = '700 40px "Times New Roman", Times, Amiri, serif'; c2.fillText(`الصف ${grade}${school ? ' · ' + school : ''}`, W / 2, 650, 1080);
     c2.fillText('هذه الشهادة تقديراً لالتزامه بتفريش أسنانه صباحاً ومساءً', W / 2, 730, 1080);
-    c2.font = '700 46px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#2a9d8f'; c2.fillText(`جمع ${green} سنّاً أخضر من 56 في تحدّي الأسابيع الأربعة`, W / 2, 810, 1080);
+    c2.font = '700 46px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#2a9d8f'; c2.fillText(`جمع ${green} سنّاً أخضر من 14 في تحدّي الأيام السبعة`, W / 2, 810, 1080);
     c2.fillStyle = '#1d1d1f'; c2.font = '700 30px "Times New Roman", Times, Amiri, serif'; c2.fillText('توقيع ولي الأمر: ................        الممرض المدرسي: ................', W / 2, 920, 1080);
     c2.font = '700 26px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#4a5560'; c2.fillText(D.credit, W / 2, 1040, 1080);
   };
