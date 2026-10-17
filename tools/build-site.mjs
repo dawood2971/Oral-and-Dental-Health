@@ -160,9 +160,11 @@ const sTrack = `<p class="hint">اضغط على السن مرة ليصبح أخ�
 <div class="cert-prev"><canvas id="cCanvas" width="1600" height="1131" aria-label="معاينة الشهادة"></canvas></div></div>`;
 
 // ---------- downloads table ----------
+for (const n of ['session-1', 'session-2', 'session-3', 'session-4', 'session-5', 'extra-slides']) cp(`${EXTRA_DIR}/pptx/${n}.pptx`, `${SITE}/assets/sessions/${n}.pptx`);
 const size = p => { try { const b = fs.statSync(`${SITE}/${p}`).size; return b > 1e6 ? `${(b / 1e6).toFixed(1)} م.ب` : `${Math.max(1, Math.round(b / 1e3))} ك.ب`; } catch { return ''; } };
 const DL = [
   ['العروض التقديمية للجلسات', decks.map((d, i) => [SESSION_NAMES[i + 1].split(' (')[0], `assets/sessions/session-${i + 1}.pdf`, 'عرض PDF'])],
+  ['العروض بصيغة PowerPoint', [...decks.map((d, i) => [SESSION_NAMES[i + 1].split(' (')[0], `assets/sessions/session-${i + 1}.pptx`, 'عرض PowerPoint']), ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pptx', 'عرض PowerPoint']]],
   ['أدلة المعلم والممرض', [['دليل الجلسات التوعوية', 'assets/sessions/facilitator-booklet.pdf', 'دليل PDF'], ['دليل الأنشطة الإضافية', 'assets/sessions/activities-guide.pdf', 'دليل PDF'], ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pdf', 'عرض PDF']]],
   ['الملصقات الجدارية', TOPICS.map(t => [t.title, `assets/${t.slug}/poster.pdf`, 'ملصق A4'])],
   ['الإنفوجرافيك', TOPICS.map(t => [t.title, `assets/${t.slug}/infographic-pdf.pdf`, 'إنفوجرافيك PDF'])],
