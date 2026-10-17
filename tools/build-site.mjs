@@ -33,8 +33,9 @@ cp(`${MAT}/ملصقات-الطلاب-مربعة-2.pdf`, `${SITE}/assets/print/st
 // ---------- art helpers ----------
 const ico = k => `<svg viewBox="-110 -110 220 220" aria-hidden="true">${IC[k]()}</svg>`;
 const wave = [[60, -212], [104, -262], [114, -330]];
-const salem = (m = 'grin') => `<svg viewBox="-110 -380 220 400" aria-hidden="true">${A.boy({ mouth: m, r: wave })}</svg>`;
-const hamad = (m = 'smile') => `<svg viewBox="-130 -380 220 400" aria-hidden="true">${A.friend({ mouth: m, l: [[-60, -206], [-104, -256], [-116, -322]] })}</svg>`;
+// Salem and Hamad come from Dawood's own pictures (assets/characters); the mood argument is kept for the callers but unused.
+const salem = () => `<img src="assets/characters/salem.webp" width="320" height="696" alt="" aria-hidden="true">`;
+const hamad = () => `<img src="assets/characters/hamad.webp" width="257" height="700" alt="" aria-hidden="true">`;
 const sinnoon = (m = 'grin', o = {}) => `<svg viewBox="-100 -100 200 200" aria-hidden="true">${A.tooth({ mouth: m, sparkle: m !== 'sad', arms: [[[-46, -6], [-80, -40]], [[46, -6], [80, -40]]], feet: true, ...o })}</svg>`;
 const T = Object.fromEntries([...TOPICS, ...MINI].map(t => [t.slug, t]));
 const food = { milk: A.laban(), cheese: A.cheese(), apple: A.apple(), carrot: A.carrot(), cucumber: A.cucumber(), yogurt: A.yogurt(), water: A.waterBottle(), banana: A.banana(), candy: A.candy(), soda: A.soda(), donut: A.donut(), chips: A.chips(), lollipop: A.lollipop() };
@@ -187,7 +188,7 @@ const DATA = {
   myths: my.myths.map(([k, m, f]) => ({ ic: ico(k), q: m, f })),
   brush: br.items.map(([k, h, p]) => ({ ic: ico(k), h, p })),
   pairs: PAIRS, order: inj.items.map(([k, h, p]) => ({ ic: ico(k), h, p })),
-  salem: `data:image/svg+xml;base64,${Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-110 -380 220 400" width="440" height="800">${A.boy({ mouth: 'grin', r: wave })}</svg>`).toString('base64')}`,
+  salem: 'assets/characters/salem.webp',
   tooth: `data:image/svg+xml;base64,${Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200" width="400" height="400">${A.tooth({ mouth: 'grin', sparkle: true, arms: [[[-46, -6], [-80, -40]], [[46, -6], [80, -40]]], feet: true })}</svg>`).toString('base64')}`,
   credit: CREDIT,
 };

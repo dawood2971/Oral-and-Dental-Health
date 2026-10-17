@@ -312,3 +312,4 @@ footer .staff{color:#fff;opacity:.8}.hgrid{grid-template-columns:repeat(auto-fit
 .wk:only-child{width:100%;max-width:440px;margin-inline:auto}
 .hero-art.hero-pic{flex:0 1 520px;height:auto;align-items:center}.hero-pic img{display:block;width:100%;height:auto}
 .hero-pic{position:relative}.hero-pic .h-t{position:absolute;left:38.5%;bottom:14%;width:22%;height:auto;aspect-ratio:1}
+.story>span img,.stc-art img{display:block;width:100%;height:100%;object-fit:contain}

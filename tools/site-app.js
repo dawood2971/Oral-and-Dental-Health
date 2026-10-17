@@ -212,7 +212,7 @@
     c2.strokeStyle = '#1f8fbf'; c2.lineWidth = 18; c2.strokeRect(30, 30, W - 60, Hh - 60);
     c2.strokeStyle = '#ffd23f'; c2.lineWidth = 6; c2.strokeRect(58, 58, W - 116, Hh - 116);
     if (lh) { const h = 150, w = lh.width * h / lh.height; c2.drawImage(lh, (W - w) / 2, 80, w, h); }
-    if (sl) c2.drawImage(sl, 85, 760, 160, 291);
+    if (sl) c2.drawImage(sl, 85, 750, 300 * sl.width / sl.height, 300);
     if (to) c2.drawImage(to, W - 310, 830, 200, 200);
     c2.direction = 'rtl'; c2.textAlign = 'center'; c2.fillStyle = '#1d1d1f';
     c2.font = '700 104px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#1f6fb2'; c2.fillText('شهادة بطل الأسنان النظيفة', W / 2, 360, 1080);
