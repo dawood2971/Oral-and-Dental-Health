@@ -5,7 +5,7 @@
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   // ---------- 1a. care self-assessment ----------
-  {
+  if ($('#cq')) {
     let i = 0; const ans = [];
     const show = () => {
       const q = D.quiz[i];
@@ -29,7 +29,7 @@
   }
 
   // ---------- 1b. food game ----------
-  {
+  if ($('#fgStart')) {
     let t = 0, sc = 0, cur = null, timer = null, deck = [];
     const best = () => store.get('foodBest', 0);
     $('#fgBest').textContent = best();
@@ -58,7 +58,7 @@
   }
 
   // ---------- 1c. germ catcher ----------
-  {
+  if ($('#gmGrid')) {
     const cells = $$('#gmGrid .gc'); let hit = 0, miss = 0, t = 0, tick = null, spawn = null;
     cells.forEach(c => c.onclick = () => { if (c.classList.contains('germ')) { c.classList.remove('germ'); c.classList.add('zap'); setTimeout(() => c.classList.remove('zap'), 300); hit++; $('#gmHit').textContent = hit; } });
     const pop = () => {
@@ -78,7 +78,7 @@
   }
 
   // ---------- 1d. brushing stepper + timer with music ----------
-  {
+  if ($('#timer')) {
     let si = 0;
     const showStep = () => { const s = D.brush[si]; $('#stArt').innerHTML = s.ic; $('#stN').textContent = si + 1; $('#stH').textContent = s.h; $('#stP').textContent = s.p; $$('#stDots i').forEach((d, i) => d.classList.toggle('on', i <= si)); $('#stPrev').disabled = si === 0; $('#stNext').textContent = si === D.brush.length - 1 ? 'من البداية' : 'التالي'; };
     $('#stNext').onclick = () => { si = (si + 1) % D.brush.length; showStep(); };
@@ -129,7 +129,7 @@
   }
 
   // ---------- 1e. myths quiz ----------
-  {
+  if ($('#quiz')) {
     let qi = 0, score = 0, over = false;
     const qShow = () => { const m = D.myths[qi]; $('#qzIc').innerHTML = m.ic; $('#qzQ').textContent = m.q; $('#qzN').textContent = `العبارة ${qi + 1} من ${D.myths.length}`; $('#qzS').textContent = `النقاط: ${score}`; $('#qzFb').className = 'qz-fb'; $('#qzFb').innerHTML = ''; $('#qzNext').hidden = true; $$('.qz-btns .btn').forEach(b => b.disabled = false); };
     $$('.qz-btns .btn').forEach(b => b.onclick = () => {
@@ -148,7 +148,7 @@
   }
 
   // ---------- 1f. match + 1g. order ----------
-  {
+  if ($('#order')) {
     const fixes = shuffle(D.pairs.map((p, i) => [p[1], i]));
     $('#mFix').innerHTML = fixes.map(([f, i]) => `<button class="mc" data-i="${i}">${esc(f)}</button>`).join('');
     let sel = null, matched = 0;
@@ -195,6 +195,7 @@
   }
 
   // ---------- 5. tracker + certificate ----------
+  if ($('#cCanvas')) {
   const ch = store.get('chart', {});
   const paint = () => { let gN = 0, rN = 0; $$('.tc').forEach(b => { const v = ch[b.dataset.k]; b.className = 'tc' + (v === 1 ? ' g' : v === 2 ? ' r' : ''); if (v === 1) gN++; if (v === 2) rN++; }); $('#chG').textContent = gN; $('#chR').textContent = rN; return gN; };
   $$('.tc').forEach(b => b.onclick = () => { const k = b.dataset.k; ch[k] = ((ch[k] || 0) + 1) % 3; store.set('chart', ch); paint(); });
@@ -234,4 +235,5 @@
     document.body.appendChild(img); document.body.classList.add('printing');
     setTimeout(() => { window.print(); setTimeout(() => { img.remove(); document.body.classList.remove('printing'); }, 500); }, 150);
   };
+  }
 })();

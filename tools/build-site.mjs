@@ -42,7 +42,7 @@ const foodSvg = k => `<svg viewBox="-80 -100 160 200" aria-hidden="true">${food[
 
 // ---------- section builders ----------
 const H = (id, kick, title, sub) => `<header class="sh" id="${id}"><span class="kick">${kick}</span><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</header>`;
-const block = (id, vars, inner) => `<section class="blk" id="${id}" style="${vars}">${inner}</section>`;
+const block = (id, vars, inner) => `<section class="blk" id="${id}">${inner}</section>`;
 
 // 1. quizzes & games
 const sQuiz = block('care-quiz', '--bg:#eaf4ff;--c1:#1f6fb2;--c2:#cfe5ff;--c3:#164f80', `${H('', 'اختبار ذاتي', 'هل تعتني بأسنانك بالطريقة الصحيحة؟', '9 أسئلة سريعة، ثم تقييم فوري ونصيحة لكل نقطة ضعف')}
@@ -159,8 +159,25 @@ const sTrack = `<p class="hint">اضغط على السن مرة ليصبح أخ�
 <div class="cert-btns"><button class="btn" id="cMake">أنشئ الشهادة</button><a class="btn ghost" id="cDl" download="شهادة-بطل-الأسنان.png" hidden>⬇ تنزيل الصورة</a><button class="btn ghost" id="cPrint" hidden>🖨 طباعة</button></div></div>
 <div class="cert-prev"><canvas id="cCanvas" width="1600" height="1131" aria-label="معاينة الشهادة"></canvas></div></div>`;
 
-const NAV = [['games', '🎮 الاختبارات والألعاب'], ['library', '📚 المكتبة الرقمية'], ['workshops', '🧑‍🏫 الجلسات والورش'], ['mouth', '🦷 خريطة الفم والأسئلة'], ['tracker', '🏆 التحديات والعادات']];
-const part = (id, n, title, sub, inner, cls = '') => `<section class="part ${cls}" id="${id}"><div class="part-h"><span class="pn">${n}</span><div><h2>${title}</h2><p>${sub}</p></div></div>${inner}</section>`;
+// ---------- downloads table ----------
+const size = p => { try { const b = fs.statSync(`${SITE}/${p}`).size; return b > 1e6 ? `${(b / 1e6).toFixed(1)} م.ب` : `${Math.max(1, Math.round(b / 1e3))} ك.ب`; } catch { return ''; } };
+const DL = [
+  ['العروض التقديمية للجلسات', decks.map((d, i) => [SESSION_NAMES[i + 1].split(' (')[0], `assets/sessions/session-${i + 1}.pdf`, 'عرض PDF'])],
+  ['أدلة المعلم والممرض', [['دليل الجلسات التوعوية', 'assets/sessions/facilitator-booklet.pdf', 'دليل PDF'], ['دليل الأنشطة الإضافية', 'assets/sessions/activities-guide.pdf', 'دليل PDF'], ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pdf', 'عرض PDF']]],
+  ['الملصقات الجدارية', TOPICS.map(t => [t.title, `assets/${t.slug}/poster.pdf`, 'ملصق A4'])],
+  ['الإنفوجرافيك', TOPICS.map(t => [t.title, `assets/${t.slug}/infographic-pdf.pdf`, 'إنفوجرافيك PDF'])],
+  ['مواد للطباعة', [['ملصقات الحائط', 'assets/print/wall-posters.pdf', 'PDF'], ['دفتر التلوين: سالم وحمد', 'assets/print/coloring-book.pdf', 'PDF'], ['ملصقات الطلاب', 'assets/print/stickers.pdf', 'PDF'], ['جدول التفريش الورقي', 'assets/chart/poster.pdf', 'PDF']]],
+];
+const dlTable = `<div class="dlt">${DL.map(([g, rows]) => `<table><caption>${g}</caption><thead><tr><th>الملف</th><th>النوع</th><th>الحجم</th><th></th></tr></thead><tbody>${rows.filter(([, p]) => fs.existsSync(`${SITE}/${p}`)).map(([n, p, ty]) => `<tr><td>${n}</td><td>${ty}</td><td>${size(p)}</td><td><a class="sbtn" href="${p}" download>⬇ تحميل</a></td></tr>`).join('')}</tbody></table>`).join('')}</div>`;
+
+// ---------- pages ----------
+const PAGES = [
+  { f: 'games.html', nav: 'الألعاب', who: 's', icon: '🎮', title: 'الاختبارات والألعاب', sub: 'اختبر عاداتك، والعب، وتعلّم بالتجربة', body: () => `<nav class="jump" aria-label="ألعاب الصفحة">${[['care-quiz', 'هل تعتني بأسنانك؟'], ['food-game', 'اختر الغذاء الصحيح'], ['germ-game', 'اصطاد السوسة'], ['brushing', 'التفريش ومؤقت الدقيقتين'], ['myths', 'صح أم خطأ؟'], ['breath', 'المحقّق سنّون'], ['injury', 'الإسعاف السريع']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sQuiz + sFood + sGerm + sBrush + sMyth + sMatch + sOrder}` },
+  { f: 'mouth.html', nav: 'خريطة الفم', who: 's', icon: '🦷', title: 'خريطة الفم والأسئلة الشائعة', sub: 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', body: () => `<section class="blk">${sMap}</section><section class="blk"><h2 class="bh">اسأل الطبيب: الأسئلة الشائعة</h2>${sFaq}</section>` },
+  { f: 'challenge.html', nav: 'التحدي والشهادة', who: 's', icon: '🏆', title: 'تحدّي التفريش وشهادة البطل', sub: 'تحدّي 28 يوماً للتفريش صباحاً ومساءً، ثم شهادتك', body: () => `<section class="blk tr">${sTrack}</section>` },
+  { f: 'library.html', nav: 'المكتبة', who: 'a', icon: '📚', title: 'المكتبة الرقمية', sub: 'إنفوجرافيك وفيديوهات وملصقات جاهزة للطباعة بالترويسة الرسمية', body: () => `<section class="blk">${sLib}</section>` },
+  { f: 'teachers.html', nav: 'للمعلم والممرض', who: 't', icon: '🧑‍🏫', title: 'ركن المعلم والممرض المدرسي', sub: 'قصص وتجربة للورش، وخطة الأنشطة، وكل الملفات في جدول واحد', body: () => `<section class="blk"><h2 class="bh">قصص قصيرة للنقاش</h2><div class="stories">${stories}</div></section><section class="blk">${exp}</section><section class="blk"><h2 class="bh">الأنشطة المقترحة لكل جلسة</h2><div class="tg-table"><table><thead><tr><th>النشاط</th><th>الجلسة</th><th>المدة</th><th>الهدف</th></tr></thead><tbody>${TOPICS.map(t => `<tr><td>${ACT[t.slug].name}</td><td>${ACT[t.slug].sessions.join(' و')}</td><td>${ACT[t.slug].time}</td><td>${ACT[t.slug].goal}</td></tr>`).join('')}</tbody></table></div></section><section class="blk" id="files"><h2 class="bh">الملفات للتحميل</h2>${dlTable}</section>` },
+];
 
 const DATA = {
   quiz: QUIZ, foods: FOODS.map(f => ({ ...f, svg: foodSvg(f.k) })), mouth: MOUTH,
@@ -172,26 +189,34 @@ const DATA = {
   credit: CREDIT,
 };
 
-const page = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ابتسامتي صحتي</title><meta name="description" content="صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر">
-<meta property="og:title" content="ابتسامتي صحتي"><meta property="og:description" content="ألعاب واختبارات ومكتبة توعوية عن صحة الفم والأسنان"><meta property="og:image" content="assets/habits/infographic.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap">
+
+const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${title}</title><meta name="description" content="${desc}">
+<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/habits/infographic.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="assets/style.css"></head><body>
-<a class="skip" href="#games">انتقل إلى المحتوى</a>
-<div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
-<header class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1></div>
-<div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></header>
-<nav class="toc" aria-label="أقسام الصفحة">${NAV.map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>
-<main>
-${part('games', '1', 'الاختبارات والألعاب التفاعلية', 'اختبر عاداتك، والعب، وتعلّم بالتجربة', sQuiz + sFood + sGerm + sBrush + sMyth + sMatch + sOrder)}
-${part('library', '2', 'المكتبة الرقمية والوسائط', 'إنفوجرافيك وفيديوهات موشن جرافيك وملصقات جاهزة للطباعة بالترويسة الرسمية', sLib, 'lib')}
-${part('workshops', '3', 'دليل الجلسات التوعوية والورش', 'محتوى للطلاب من الصف الخامس إلى السابع، وأدوات جاهزة للمعلم والممرض المدرسي', `<h3 class="ph3">🎒 حقيبة الطالب</h3><div class="stories">${stories}</div>${exp}<h3 class="ph3">🧑‍🏫 دليل المعلم والممرض المدرسي</h3>${teacher}`, 'ws')}
-${part('mouth', '4', 'خريطة الفم والأسئلة الشائعة', 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', sMap + `<h3 class="ph3">❓ اسأل الطبيب: الأسئلة الشائعة</h3>` + sFaq, 'mo')}
-${part('tracker', '5', 'التحديات وحساب العادات', 'تحدّي 28 يوماً للتفريش صباحاً ومساءً، ثم شهادتك', sTrack, 'tr')}
-</main>
-<footer><p>${CREDIT}</p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
+<a class="skip" href="#main">انتقل إلى المحتوى</a>`;
+const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
+<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">ابتسامتي صحتي</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
+const FOOT = `<footer><p>${CREDIT}</p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
 <script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script></body></html>`;
-fs.writeFileSync(`${SITE}/index.html`, page.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`));
+const fix = h => h.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`);
+const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${p.icon}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
+const home = `${HEAD('ابتسامتي صحتي', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
+<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1>
+<div class="hero-cta"><a class="btn" href="#students">ركن الطلاب</a><a class="btn ghost" href="teachers.html">ركن المعلم والممرض</a></div></div>
+<div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></section>
+<section class="hgroup" id="students"><h2 class="gh">للطلاب</h2><div class="hgrid">${PAGES.filter(p => p.who === 's').map(card).join('')}</div></section>
+<section class="hgroup"><h2 class="gh">للمعلم والممرض والأسرة</h2><div class="hgrid">${PAGES.filter(p => p.who !== 's').map(card).join('')}</div></section>
+</main>${FOOT}`;
+fs.writeFileSync(`${SITE}/index.html`, fix(home));
+for (const p of PAGES) {
+  const html = `${HEAD(`${p.title} · ابتسامتي صحتي`, p.sub)}${TOP(p.f)}
+<main id="main"><div class="ph"><a class="crumb" href="./">الرئيسية</a><h1>${p.title}</h1><p>${p.sub}</p></div>
+${p.body()}
+<nav class="next" aria-label="صفحات أخرى">${PAGES.filter(q => q !== p).map(q => `<a href="${q.f}">${q.icon} ${q.nav}</a>`).join('')}</nav></main>${FOOT}`;
+  fs.writeFileSync(`${SITE}/${p.f}`, fix(html));
+}
 cp(`${HERE}/site-style.css`, `${SITE}/assets/style.css`);
 cp(`${HERE}/site-app.js`, `${SITE}/assets/app.js`);
 fs.writeFileSync(`${SITE}/.nojekyll`, '');
