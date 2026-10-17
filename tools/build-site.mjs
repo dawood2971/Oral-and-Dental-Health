@@ -97,11 +97,14 @@ const EXTRA_DIR = process.argv[5] || '/mnt/project-files/library/moph';
 const EXTRA = [
   { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
   { slug: 'role-model', file: 'video-11-be-a-role-model.mp4', title: 'كن قدوة لأطفالك', who: 'للأسر' },
+  { slug: 'healthy-diet', file: 'video-12-healthy-diet.mp4', title: 'غذاء صحي، ابتسامة مشرقة', who: 'للطلاب', cover: 21 },
 ].filter(v => fs.existsSync(`${EXTRA_DIR}/${v.file}`));
 for (const v of EXTRA) {
   fs.mkdirSync(`${SITE}/assets/${v.slug}`, { recursive: true });
-  fs.copyFileSync(`${EXTRA_DIR}/${v.file}`, `${SITE}/assets/${v.slug}/video.mp4`);
-  execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', '1.5', '-i', `${EXTRA_DIR}/${v.file}`, '-frames:v', '1', '-vf', 'scale=960:-2', '-q:v', '3', `${SITE}/assets/${v.slug}/cover.jpg`]);
+  // a smaller re-encode in web/ is preferred over the original when present
+  const src = fs.existsSync(`${EXTRA_DIR}/web/${v.file}`) ? `${EXTRA_DIR}/web/${v.file}` : `${EXTRA_DIR}/${v.file}`;
+  fs.copyFileSync(src, `${SITE}/assets/${v.slug}/video.mp4`);
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', String(v.cover ?? 1.5), '-i', `${EXTRA_DIR}/${v.file}`, '-frames:v', '1', '-vf', 'scale=960:-2', '-q:v', '3', `${SITE}/assets/${v.slug}/cover.jpg`]);
 }
 const vidsWide = EXTRA.map(v => `<figure class="vd wide"><video controls preload="none" playsinline poster="assets/${v.slug}/cover.jpg" src="assets/${v.slug}/video.mp4"></video><figcaption><b>${v.title}</b><span class="who">${v.who}</span><span class="acts"><a class="sbtn" href="assets/${v.slug}/video.mp4" download>⬇ MP4</a></span></figcaption></figure>`).join('');
 const vids = [...MINI, ...TOPICS].map(t => `<figure class="vd"><video controls preload="none" playsinline poster="assets/${t.slug}/cover.jpg" src="assets/${t.slug}/video.mp4"></video><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/video.mp4" download>⬇ MP4</a><a class="sbtn" href="assets/${t.slug}/script.pdf" download>⬇ السيناريو</a></span></figcaption></figure>`).join('');
