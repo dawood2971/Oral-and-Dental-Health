@@ -92,7 +92,7 @@ const sOrder = block('injury', inj.vars, `${H('', 'فريق الإسعاف ال�
 
 // 2. media library
 const ALL = [...TOPICS, ...MINI];
-const igGallery = TOPICS.map(t => `<figure class="ig"><a href="assets/${t.slug}/infographic.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/infographic.png" alt="إنفوجرافيك: ${t.title}"></a><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/infographic.png" download>⬇ صورة</a><a class="sbtn" href="assets/${t.slug}/infographic-pdf.pdf" download>⬇ PDF</a><button class="sbtn share" data-url="assets/${t.slug}/infographic.png" data-title="${t.title}">↗ مشاركة</button></span></figcaption></figure>`).join('');
+const igGallery = TOPICS.map(t => `<figure class="ig"><a href="assets/${t.slug}/infographic.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/infographic.png" alt="إنفوجرافيك: ${t.title}"></a><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/infographic.png" download>⬇ صورة</a><button class="sbtn share" data-url="assets/${t.slug}/infographic.png" data-title="${t.title}">↗ مشاركة</button></span></figcaption></figure>`).join('');
 const EXTRA_DIR = process.argv[5] || '/mnt/project-files/library/moph';
 const EXTRA = [
   { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
@@ -107,12 +107,12 @@ for (const v of EXTRA) {
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', String(v.cover ?? 1.5), '-i', `${EXTRA_DIR}/${v.file}`, '-frames:v', '1', '-vf', 'scale=960:-2', '-q:v', '3', `${SITE}/assets/${v.slug}/cover.jpg`]);
 }
 const vidsWide = EXTRA.map(v => `<figure class="vd wide"><video controls preload="none" playsinline poster="assets/${v.slug}/cover.jpg" src="assets/${v.slug}/video.mp4"></video><figcaption><b>${v.title}</b><span class="who">${v.who}</span><span class="acts"><a class="sbtn" href="assets/${v.slug}/video.mp4" download>⬇ MP4</a></span></figcaption></figure>`).join('');
-const vids = [...MINI, ...TOPICS].map(t => `<figure class="vd"><video controls preload="none" playsinline poster="assets/${t.slug}/cover.jpg" src="assets/${t.slug}/video.mp4"></video><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/video.mp4" download>⬇ MP4</a><a class="sbtn" href="assets/${t.slug}/script.pdf" download>⬇ السيناريو</a></span></figcaption></figure>`).join('');
+const vids = [...MINI, ...TOPICS].map(t => `<figure class="vd"><video controls preload="none" playsinline poster="assets/${t.slug}/cover.jpg" src="assets/${t.slug}/video.mp4"></video><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/video.mp4" download>⬇ MP4</a></span></figcaption></figure>`).join('');
 const posters = TOPICS.map(t => `<figure class="ps"><a href="assets/${t.slug}/poster.pdf" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/poster-img.png" alt="ملصق: ${t.title}"></a><figcaption><b>${t.title}</b><a class="sbtn" href="assets/${t.slug}/poster.pdf" download>⬇ PDF للطباعة</a></figcaption></figure>`).join('');
-const sLib = `<div class="tabs" role="tablist"><button role="tab" class="tab on" data-tab="tabIg" aria-selected="true">معرض الإنفوجرافيك</button><button role="tab" class="tab" data-tab="tabVd" aria-selected="false">استوديو الفيديو</button><button role="tab" class="tab" data-tab="tabPs" aria-selected="false">ركن الملصقات</button></div>
+const sLib = `<div class="tabs" role="tablist"><button role="tab" class="tab on" data-tab="tabIg" aria-selected="true">معرض الإنفوجرافيك</button><button role="tab" class="tab" data-tab="tabVd" aria-selected="false">استوديو الفيديو</button></div>
 <div class="tabp" id="tabIg"><div class="ig-grid">${igGallery}</div></div>
-<div class="tabp" id="tabVd" hidden>${vidsWide ? `<h3 class="ph3">فيديوهات توعوية</h3><div class="vd-wide">${vidsWide}</div><h3 class="ph3">فيديوهات الموضوعات</h3>` : ''}<div class="vd-grid">${vids}</div></div>
-<div class="tabp" id="tabPs" hidden><div class="ps-grid">${posters}</div><div class="more-print"><b>مواد إضافية للطباعة:</b><a class="sbtn" href="assets/print/wall-posters.pdf" download>⬇ ملصقات الحائط</a><a class="sbtn" href="assets/print/coloring-book.pdf" download>⬇ دفتر التلوين: سالم وحمد</a><a class="sbtn" href="assets/print/stickers.pdf" download>⬇ ملصقات الطلاب</a></div></div>`;
+<div class="tabp" id="tabVd" hidden>${vidsWide ? `<h3 class="ph3">فيديوهات توعوية</h3><div class="vd-wide">${vidsWide}</div><h3 class="ph3">فيديوهات الموضوعات</h3>` : ''}<div class="vd-grid">${vids}</div></div>`;
+const sPosters = `<div class="ps-grid"><div class="ps-grid">${posters}</div><div class="more-print"><b>مواد إضافية للطباعة:</b><a class="sbtn" href="assets/print/wall-posters.pdf" download>⬇ ملصقات الحائط</a><a class="sbtn" href="assets/print/coloring-book.pdf" download>⬇ دفتر التلوين: سالم وحمد</a><a class="sbtn" href="assets/print/stickers.pdf" download>⬇ ملصقات الطلاب</a></div>`;
 
 // 3. workshops hub
 const stories = STORIES.map((s, i) => `<article class="stc"><div class="stc-art">${i === 1 ? hamad(s.mouth) : salem(s.mouth)}</div><div><h4>${s.title}</h4>${s.text.map(p => `<p>${p}</p>`).join('')}<details><summary>أسئلة للنقاش</summary><ol>${s.qs.map(q => `<li>${q}</li>`).join('')}</ol></details></div></article>`).join('');
@@ -177,8 +177,8 @@ const PAGES = [
   { f: 'games.html', nav: 'الألعاب', who: 's', icon: '🎮', title: 'الاختبارات والألعاب', sub: 'اختبر عاداتك، والعب، وتعلّم بالتجربة', body: () => `<nav class="jump" aria-label="ألعاب الصفحة">${[['care-quiz', 'هل تعتني بأسنانك؟'], ['food-game', 'اختر الغذاء الصحيح'], ['germ-game', 'اصطاد السوسة'], ['brushing', 'التفريش ومؤقت الدقيقتين'], ['myths', 'صح أم خطأ؟'], ['breath', 'المحقّق سنّون'], ['injury', 'الإسعاف السريع']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sQuiz + sFood + sGerm + sBrush + sMyth + sMatch + sOrder}` },
   { f: 'mouth.html', nav: 'خريطة الفم', who: 's', icon: '🦷', title: 'خريطة الفم والأسئلة الشائعة', sub: 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', body: () => `<section class="blk">${sMap}</section><section class="blk"><h2 class="bh">اسأل الطبيب: الأسئلة الشائعة</h2>${sFaq}</section>` },
   { f: 'challenge.html', nav: 'التحدي والشهادة', who: 's', icon: '🏆', title: 'تحدّي التفريش وشهادة البطل', sub: 'تحدّي 28 يوماً للتفريش صباحاً ومساءً، ثم شهادتك', body: () => `<section class="blk tr">${sTrack}</section>` },
-  { f: 'library.html', nav: 'المكتبة', who: 'a', icon: '📚', title: 'المكتبة الرقمية', sub: 'إنفوجرافيك وفيديوهات وملصقات جاهزة للطباعة بالترويسة الرسمية', body: () => `<section class="blk">${sLib}</section>` },
-  { f: 'teachers.html', nav: 'للمعلم والممرض', who: 't', icon: '🧑‍🏫', title: 'ركن المعلم والممرض المدرسي', sub: 'قصص وتجربة للورش، وخطة الأنشطة، وكل الملفات في جدول واحد', body: () => `<section class="blk"><h2 class="bh">قصص قصيرة للنقاش</h2><div class="stories">${stories}</div></section><section class="blk">${exp}</section><section class="blk"><h2 class="bh">الأنشطة المقترحة لكل جلسة</h2><div class="tg-table"><table><thead><tr><th>النشاط</th><th>الجلسة</th><th>المدة</th><th>الهدف</th></tr></thead><tbody>${TOPICS.map(t => `<tr><td>${ACT[t.slug].name}</td><td>${ACT[t.slug].sessions.join(' و')}</td><td>${ACT[t.slug].time}</td><td>${ACT[t.slug].goal}</td></tr>`).join('')}</tbody></table></div></section><section class="blk" id="files"><h2 class="bh">الملفات للتحميل</h2>${dlTable}</section>` },
+  { f: 'library.html', nav: 'الفيديوهات والإنفوجرافيك', who: 's', icon: '🎬', title: 'الفيديوهات والإنفوجرافيك', sub: 'شاهد الفيديوهات وتصفّح الإنفوجرافيك عن صحة الفم والأسنان', body: () => `<section class="blk">${sLib}</section>` },
+  { f: 'teachers.html', nav: 'ركن المعلم والممرض', who: 't', hidden: true, icon: '🧑‍🏫', title: 'ركن المعلم والممرض المدرسي', sub: 'قصص وتجربة للورش، وخطة الأنشطة، وكل الملفات في جدول واحد', body: () => `<section class="blk"><h2 class="bh">قصص قصيرة للنقاش</h2><div class="stories">${stories}</div></section><section class="blk">${exp}</section><section class="blk"><h2 class="bh">الأنشطة المقترحة لكل جلسة</h2><div class="tg-table"><table><thead><tr><th>النشاط</th><th>الجلسة</th><th>المدة</th><th>الهدف</th></tr></thead><tbody>${TOPICS.map(t => `<tr><td>${ACT[t.slug].name}</td><td>${ACT[t.slug].sessions.join(' و')}</td><td>${ACT[t.slug].time}</td><td>${ACT[t.slug].goal}</td></tr>`).join('')}</tbody></table></div></section><section class="blk"><h2 class="bh">الملصقات الجدارية للطباعة</h2>${sPosters}</section><section class="blk" id="files"><h2 class="bh">الملفات للتحميل</h2>${dlTable}</section>` },
 ];
 
 const DATA = {
@@ -199,24 +199,23 @@ const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><m
 <link rel="stylesheet" href="assets/style.css"></head><body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>`;
 const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
-<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">ابتسامتي صحتي</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
-const FOOT = `<footer><p>${CREDIT}</p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
+<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">ابتسامتي صحتي</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
+const FOOT = `<footer><p>${CREDIT}</p><p class="sm"><a class="staff" href="teachers.html">ركن المعلم والممرض المدرسي</a></p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
 <script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script></body></html>`;
 const fix = h => h.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`);
 const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${p.icon}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
 const home = `${HEAD('ابتسامتي صحتي', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
 <main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1>
-<div class="hero-cta"><a class="btn" href="#students">ركن الطلاب</a><a class="btn ghost" href="teachers.html">ركن المعلم والممرض</a></div></div>
+<div class="hero-cta"><a class="btn" href="games.html">ابدأ اللعب</a><a class="btn ghost" href="challenge.html">تحدّي التفريش</a></div></div>
 <div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></section>
-<section class="hgroup" id="students"><h2 class="gh">للطلاب</h2><div class="hgrid">${PAGES.filter(p => p.who === 's').map(card).join('')}</div></section>
-<section class="hgroup"><h2 class="gh">للمعلم والممرض والأسرة</h2><div class="hgrid">${PAGES.filter(p => p.who !== 's').map(card).join('')}</div></section>
+<section class="hgroup" id="students"><div class="hgrid">${PAGES.filter(p => !p.hidden).map(card).join('')}</div></section>
 </main>${FOOT}`;
 fs.writeFileSync(`${SITE}/index.html`, fix(home));
 for (const p of PAGES) {
   const html = `${HEAD(`${p.title} · ابتسامتي صحتي`, p.sub)}${TOP(p.f)}
 <main id="main"><div class="ph"><a class="crumb" href="./">الرئيسية</a><h1>${p.title}</h1><p>${p.sub}</p></div>
 ${p.body()}
-<nav class="next" aria-label="صفحات أخرى">${PAGES.filter(q => q !== p).map(q => `<a href="${q.f}">${q.icon} ${q.nav}</a>`).join('')}</nav></main>${FOOT}`;
+<nav class="next" aria-label="صفحات أخرى">${PAGES.filter(q => q !== p && !q.hidden).map(q => `<a href="${q.f}">${q.icon} ${q.nav}</a>`).join('')}</nav></main>${FOOT}`;
   fs.writeFileSync(`${SITE}/${p.f}`, fix(html));
 }
 cp(`${HERE}/site-style.css`, `${SITE}/assets/style.css`);
