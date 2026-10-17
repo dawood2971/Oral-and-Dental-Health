@@ -196,12 +196,12 @@ const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><m
 <title>${title}</title><meta name="description" content="${desc}">
 <meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/habits/infographic.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css"></head><body>
+<link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/lenis.css"><link rel="stylesheet" href="assets/motion.css"><script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('mo');setTimeout(function(){document.documentElement.classList.remove('mo')},3000)}</script></head><body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>`;
 const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
 <nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">ابتسامتي صحتي</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
 const FOOT = `<footer><p>${CREDIT}</p><p class="sm"><a class="staff" href="teachers.html">ركن المعلم والممرض المدرسي</a></p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
-<script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script></body></html>`;
+<script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script><script src="assets/motion.js" defer></script></body></html>`;
 const fix = h => h.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`);
 const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${p.icon}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
 const home = `${HEAD('ابتسامتي صحتي', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}

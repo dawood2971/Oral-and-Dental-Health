@@ -17,6 +17,12 @@
 
 مولّدات المواد (الملصقات والإنفوجرافيك والفيديو والصفحة) في مجلد `tools/`.
 
+## الحركة
+طبقة الحركة في `assets/motion.js` و`assets/motion.css` (مع `assets/lenis.css`)، ومصدرها في `tools/motion/`:
+التمرير الناعم بـ Lenis مربوط بمؤقّت GSAP مع ScrollTrigger، ومكوّنات React Bits (Blur Text للعنوان، وLight Rays لخلفية الواجهة، وStar Border للزر الأساسي، وCount Up للأرقام)، وظهور الأقسام بهدوء عند التمرير.
+عند تفعيل «تقليل الحركة» في الجهاز تتوقف كل الحركة وتظهر الصفحة ثابتة.
+لإعادة البناء: `cd tools/motion && npm install && npm run build`.
+
 ## النشر
 الصفحة ثابتة بالكامل (HTML وCSS وJS بلا أدوات بناء). للنشر: Settings ← Pages ← Deploy from a branch ← `main` / root.
 
