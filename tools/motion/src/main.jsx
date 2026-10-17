@@ -1,4 +1,4 @@
-// Motion layer for «ابتسامتي صحتي». Built into assets/motion.js (+ motion.css) by `npm run build`.
+// Motion layer for «صحة الفم والأسنان». Built into assets/motion.js (+ motion.css) by `npm run build`.
 // Lenis drives scrolling from the GSAP ticker so ScrollTrigger and Lenis share one clock.
 // Nothing here changes text or colours; with prefers-reduced-motion the page stays still.
 import { createRoot } from 'react-dom/client';

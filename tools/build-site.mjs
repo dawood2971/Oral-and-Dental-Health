@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-// Builds the static interactive page «ابتسامتي صحتي» for GitHub Pages.
+// Builds the static interactive page «صحة الفم والأسنان» for GitHub Pages.
 // usage: node build-site.mjs <library-out-dir> <site-dir> [<project-materials-dir>] [<extra-videos-dir>]
 import * as A from './art.mjs';
 import { CREDIT } from './render.mjs';
@@ -199,20 +199,20 @@ const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><m
 <link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/lenis.css"><link rel="stylesheet" href="assets/motion.css"><script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('mo');setTimeout(function(){document.documentElement.classList.remove('mo')},3000)}</script></head><body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>`;
 const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
-<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">ابتسامتي صحتي</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
+<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">صحة الفم والأسنان</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
 const FOOT = `<footer><p>${CREDIT}</p><p class="sm"><a class="staff" href="teachers.html">ركن المعلم والممرض المدرسي</a></p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
 <script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script><script src="assets/motion.js" defer></script></body></html>`;
 const fix = h => h.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`);
 const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${p.icon}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
-const home = `${HEAD('ابتسامتي صحتي', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
-<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1>
+const home = `${HEAD('صحة الفم والأسنان', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
+<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>صحة الفم والأسنان</h1>
 <div class="hero-cta"><a class="btn" href="games.html">ابدأ اللعب</a><a class="btn ghost" href="challenge.html">تحدّي التفريش</a></div></div>
 <div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></section>
 <section class="hgroup" id="students"><div class="hgrid">${PAGES.filter(p => !p.hidden).map(card).join('')}</div></section>
 </main>${FOOT}`;
 fs.writeFileSync(`${SITE}/index.html`, fix(home));
 for (const p of PAGES) {
-  const html = `${HEAD(`${p.title} · ابتسامتي صحتي`, p.sub)}${TOP(p.f)}
+  const html = `${HEAD(`${p.title} · صحة الفم والأسنان`, p.sub)}${TOP(p.f)}
 <main id="main"><div class="ph"><a class="crumb" href="./">الرئيسية</a><h1>${p.title}</h1><p>${p.sub}</p></div>
 ${p.body()}
 <nav class="next" aria-label="صفحات أخرى">${PAGES.filter(q => q !== p && !q.hidden).map(q => `<a href="${q.f}">${q.icon} ${q.nav}</a>`).join('')}</nav></main>${FOOT}`;
