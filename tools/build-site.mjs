@@ -16,7 +16,7 @@ const cp = (a, b) => { if (fs.existsSync(a)) { fs.mkdirSync(path.dirname(b), { r
 cp(`${HERE}/../fonts/letterhead.jpg`, `${SITE}/assets/letterhead.jpg`);
 
 // ---------- copy library files ----------
-const FILES = [['poster', 'ملصق-جداري.pdf'], ['poster-img', 'ملصق-جداري.png'], ['infographic', 'انفوجرافيك.png'], ['infographic-pdf', 'انفوجرافيك.pdf'], ['video', 'فيديو.mp4'], ['script', 'سيناريو-الفيديو-ولوحة-القصة.pdf']];
+const FILES = [['poster', 'ملصق-جداري.pdf'], ['poster-img', 'ملصق-جداري.png'], ['video', 'فيديو.mp4'], ['script', 'سيناريو-الفيديو-ولوحة-القصة.pdf']];
 for (const t of [...TOPICS, ...MINI]) {
   for (const [k, f] of FILES) cp(`${LIB}/${t.id}/${f}`, `${SITE}/assets/${t.slug}/${k}.${f.split('.').pop()}`);
   cp(`${LIB}/_thumbs/${t.slug}/scene-1.jpg`, `${SITE}/assets/${t.slug}/cover.jpg`);
@@ -93,7 +93,22 @@ const sOrder = block('injury', inj.vars, `${H('', 'فريق الإسعاف ال�
 
 // 2. media library
 const ALL = [...TOPICS, ...MINI];
-const igGallery = TOPICS.map(t => `<figure class="ig"><a href="assets/${t.slug}/infographic.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/infographic.png" alt="إنفوجرافيك: ${t.title}"></a><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/infographic.png" download>⬇ صورة</a><button class="sbtn share" data-url="assets/${t.slug}/infographic.png" data-title="${t.title}">↗ مشاركة</button></span></figcaption></figure>`).join('');
+// Dawood's own infographics (materials/infographics): a web-sized JPG for viewing and the PDF for printing
+const IG = [
+  ['brushing-technique-infographic', 'الطريقة الصحيحة لتفريش الأسنان'],
+  ['oral-health-tips-infographic', 'صحة الفم والأسنان'],
+  ['oral-health-myths-infographic', 'المفاهيم الخاطئة حول صحة الفم'],
+  ['bad-breath-prevention-infographic', 'الوقاية من رائحة الفم الكريهة'],
+  ['tooth-facts-infographic', 'حقائق مثيرة عن الأسنان'],
+  ['dental-injuries-infographic', 'إصابات الأسنان'],
+  ['weekly-brushing-chart', 'جدول تفريش أسناني الأسبوعي'],
+].filter(([f]) => fs.existsSync(`${MAT}/infographics/${f}.png`));
+fs.mkdirSync(`${SITE}/assets/infographics`, { recursive: true });
+for (const [f] of IG) {
+  cp(`${MAT}/infographics/${f}.pdf`, `${SITE}/assets/infographics/${f}.pdf`);
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', `${MAT}/infographics/${f}.png`, '-vf', 'scale=1240:-2', '-q:v', '3', `${SITE}/assets/infographics/${f}.jpg`]);
+}
+const igGallery = IG.map(([f, t]) => `<figure class="ig"><a href="assets/infographics/${f}.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/infographics/${f}.jpg" alt="إنفوجرافيك: ${t}"></a><figcaption><b>${t}</b><span class="acts"><a class="sbtn" href="assets/infographics/${f}.jpg" download>⬇ صورة</a><a class="sbtn" href="assets/infographics/${f}.pdf" download>⬇ PDF</a><button class="sbtn share" data-url="assets/infographics/${f}.jpg" data-title="${t}">↗ مشاركة</button></span></figcaption></figure>`).join('');
 const EXTRA_DIR = process.argv[5] || '/mnt/project-files/library/moph';
 const EXTRA = [
   { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
@@ -168,7 +183,7 @@ const DL = [
   ['العروض بصيغة PowerPoint', [...decks.map((d, i) => [SESSION_NAMES[i + 1].split(' (')[0], `assets/sessions/session-${i + 1}.pptx`, 'عرض PowerPoint']), ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pptx', 'عرض PowerPoint']]],
   ['أدلة المعلم والممرض', [['دليل الجلسات التوعوية', 'assets/sessions/facilitator-booklet.pdf', 'دليل PDF'], ['دليل الأنشطة الإضافية', 'assets/sessions/activities-guide.pdf', 'دليل PDF'], ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pdf', 'عرض PDF']]],
   ['الملصقات الجدارية', TOPICS.map(t => [t.title, `assets/${t.slug}/poster.pdf`, 'ملصق A4'])],
-  ['الإنفوجرافيك', TOPICS.map(t => [t.title, `assets/${t.slug}/infographic-pdf.pdf`, 'إنفوجرافيك PDF'])],
+  ['الإنفوجرافيك', IG.map(([f, t]) => [t, `assets/infographics/${f}.pdf`, 'إنفوجرافيك PDF'])],
   ['مواد للطباعة', [['ملصقات الحائط', 'assets/print/wall-posters.pdf', 'PDF'], ['دفتر التلوين: سالم وحمد', 'assets/print/coloring-book.pdf', 'PDF'], ['ملصقات الطلاب', 'assets/print/stickers.pdf', 'PDF'], ['جدول التفريش الورقي', 'assets/chart/poster.pdf', 'PDF']]],
 ];
 const dlTable = `<div class="dlt">${DL.map(([g, rows]) => `<table><caption>${g}</caption><thead><tr><th>الملف</th><th>النوع</th><th>الحجم</th><th></th></tr></thead><tbody>${rows.filter(([, p]) => fs.existsSync(`${SITE}/${p}`)).map(([n, p, ty]) => `<tr><td>${n}</td><td>${ty}</td><td>${size(p)}</td><td><a class="sbtn" href="${p}" download>⬇ تحميل</a></td></tr>`).join('')}</tbody></table>`).join('')}</div>`;
@@ -196,7 +211,7 @@ const DATA = {
 
 const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}">
-<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/habits/infographic.png">
+<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/infographics/oral-health-tips-infographic.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/lenis.css"><link rel="stylesheet" href="assets/motion.css"><script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('mo');setTimeout(function(){document.documentElement.classList.remove('mo')},3000)}</script></head><body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>`;
