@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-// Builds the static interactive page «ابتسامتي صحتي» for GitHub Pages.
+// Builds the static interactive page «صحة الفم والأسنان» for GitHub Pages.
 // usage: node build-site.mjs <library-out-dir> <site-dir> [<project-materials-dir>] [<extra-videos-dir>]
 import * as A from './art.mjs';
 import { CREDIT } from './render.mjs';
@@ -16,7 +16,7 @@ const cp = (a, b) => { if (fs.existsSync(a)) { fs.mkdirSync(path.dirname(b), { r
 cp(`${HERE}/../fonts/letterhead.jpg`, `${SITE}/assets/letterhead.jpg`);
 
 // ---------- copy library files ----------
-const FILES = [['poster', 'ملصق-جداري.pdf'], ['poster-img', 'ملصق-جداري.png'], ['infographic', 'انفوجرافيك.png'], ['infographic-pdf', 'انفوجرافيك.pdf'], ['video', 'فيديو.mp4'], ['script', 'سيناريو-الفيديو-ولوحة-القصة.pdf']];
+const FILES = [['poster', 'ملصق-جداري.pdf'], ['poster-img', 'ملصق-جداري.png'], ['video', 'فيديو.mp4'], ['script', 'سيناريو-الفيديو-ولوحة-القصة.pdf']];
 for (const t of [...TOPICS, ...MINI]) {
   for (const [k, f] of FILES) cp(`${LIB}/${t.id}/${f}`, `${SITE}/assets/${t.slug}/${k}.${f.split('.').pop()}`);
   cp(`${LIB}/_thumbs/${t.slug}/scene-1.jpg`, `${SITE}/assets/${t.slug}/cover.jpg`);
@@ -33,8 +33,9 @@ cp(`${MAT}/ملصقات-الطلاب-مربعة-2.pdf`, `${SITE}/assets/print/st
 // ---------- art helpers ----------
 const ico = k => `<svg viewBox="-110 -110 220 220" aria-hidden="true">${IC[k]()}</svg>`;
 const wave = [[60, -212], [104, -262], [114, -330]];
-const salem = (m = 'grin') => `<svg viewBox="-110 -380 220 400" aria-hidden="true">${A.boy({ mouth: m, r: wave })}</svg>`;
-const hamad = (m = 'smile') => `<svg viewBox="-130 -380 220 400" aria-hidden="true">${A.friend({ mouth: m, l: [[-60, -206], [-104, -256], [-116, -322]] })}</svg>`;
+// Salem and Hamad come from Dawood's own pictures (assets/characters); the mood argument is kept for the callers but unused.
+const salem = () => `<img src="assets/characters/salem.webp" width="320" height="696" alt="" aria-hidden="true">`;
+const hamad = () => `<img src="assets/characters/hamad.webp" width="257" height="700" alt="" aria-hidden="true">`;
 const sinnoon = (m = 'grin', o = {}) => `<svg viewBox="-100 -100 200 200" aria-hidden="true">${A.tooth({ mouth: m, sparkle: m !== 'sad', arms: [[[-46, -6], [-80, -40]], [[46, -6], [80, -40]]], feet: true, ...o })}</svg>`;
 const T = Object.fromEntries([...TOPICS, ...MINI].map(t => [t.slug, t]));
 const food = { milk: A.laban(), cheese: A.cheese(), apple: A.apple(), carrot: A.carrot(), cucumber: A.cucumber(), yogurt: A.yogurt(), water: A.waterBottle(), banana: A.banana(), candy: A.candy(), soda: A.soda(), donut: A.donut(), chips: A.chips(), lollipop: A.lollipop() };
@@ -92,7 +93,22 @@ const sOrder = block('injury', inj.vars, `${H('', 'فريق الإسعاف ال�
 
 // 2. media library
 const ALL = [...TOPICS, ...MINI];
-const igGallery = TOPICS.map(t => `<figure class="ig"><a href="assets/${t.slug}/infographic.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/${t.slug}/infographic.png" alt="إنفوجرافيك: ${t.title}"></a><figcaption><b>${t.title}</b><span class="acts"><a class="sbtn" href="assets/${t.slug}/infographic.png" download>⬇ صورة</a><button class="sbtn share" data-url="assets/${t.slug}/infographic.png" data-title="${t.title}">↗ مشاركة</button></span></figcaption></figure>`).join('');
+// Dawood's own infographics (materials/infographics): a web-sized JPG for viewing and the PDF for printing
+const IG = [
+  ['brushing-technique-infographic', 'الطريقة الصحيحة لتفريش الأسنان'],
+  ['oral-health-tips-infographic', 'صحة الفم والأسنان'],
+  ['oral-health-myths-infographic', 'المفاهيم الخاطئة حول صحة الفم'],
+  ['bad-breath-prevention-infographic', 'الوقاية من رائحة الفم الكريهة'],
+  ['tooth-facts-infographic', 'حقائق مثيرة عن الأسنان'],
+  ['dental-injuries-infographic', 'إصابات الأسنان'],
+  ['weekly-brushing-chart', 'جدول تفريش أسناني الأسبوعي'],
+].filter(([f]) => fs.existsSync(`${MAT}/infographics/${f}.png`));
+fs.mkdirSync(`${SITE}/assets/infographics`, { recursive: true });
+for (const [f] of IG) {
+  cp(`${MAT}/infographics/${f}.pdf`, `${SITE}/assets/infographics/${f}.pdf`);
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', `${MAT}/infographics/${f}.png`, '-vf', 'scale=1240:-2', '-q:v', '3', `${SITE}/assets/infographics/${f}.jpg`]);
+}
+const igGallery = IG.map(([f, t]) => `<figure class="ig"><a href="assets/infographics/${f}.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/infographics/${f}.jpg" alt="إنفوجرافيك: ${t}"></a><figcaption><b>${t}</b><span class="acts"><a class="sbtn" href="assets/infographics/${f}.jpg" download>⬇ صورة</a><a class="sbtn" href="assets/infographics/${f}.pdf" download>⬇ PDF</a><button class="sbtn share" data-url="assets/infographics/${f}.jpg" data-title="${t}">↗ مشاركة</button></span></figcaption></figure>`).join('');
 const EXTRA_DIR = process.argv[5] || '/mnt/project-files/library/moph';
 const EXTRA = [
   { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
@@ -115,8 +131,8 @@ const sLib = `<div class="tabs" role="tablist"><button role="tab" class="tab on"
 const sPosters = `<div class="ps-grid"><div class="ps-grid">${posters}</div><div class="more-print"><b>مواد إضافية للطباعة:</b><a class="sbtn" href="assets/print/wall-posters.pdf" download>⬇ ملصقات الحائط</a><a class="sbtn" href="assets/print/coloring-book.pdf" download>⬇ دفتر التلوين: سالم وحمد</a><a class="sbtn" href="assets/print/stickers.pdf" download>⬇ ملصقات الطلاب</a></div>`;
 
 // 3. workshops hub
-const stories = STORIES.map((s, i) => `<article class="stc"><div class="stc-art">${i === 1 ? hamad(s.mouth) : salem(s.mouth)}</div><div><h4>${s.title}</h4>${s.text.map(p => `<p>${p}</p>`).join('')}<details><summary>أسئلة للنقاش</summary><ol>${s.qs.map(q => `<li>${q}</li>`).join('')}</ol></details></div></article>`).join('');
-const exp = `<article class="exp"><h4>🧪 ${EXPERIMENT.title}</h4><p>${EXPERIMENT.idea}</p><div class="exp-cols"><div><b>تحتاج:</b><ul>${EXPERIMENT.tools.map(x => `<li>${x}</li>`).join('')}</ul></div><div><b>الخطوات:</b><ol>${EXPERIMENT.steps.map(x => `<li>${x}</li>`).join('')}</ol></div></div>
+const stories = STORIES.map((s, i) => `<article class="stc"><div class="stc-art">${i === 1 ? hamad(s.mouth) : salem(s.mouth)}</div><div><h3>${s.title}</h3>${s.text.map(p => `<p>${p}</p>`).join('')}<details><summary>أسئلة للنقاش</summary><ol>${s.qs.map(q => `<li>${q}</li>`).join('')}</ol></details></div></article>`).join('');
+const exp = `<article class="exp"><h3>🧪 ${EXPERIMENT.title}</h3><p>${EXPERIMENT.idea}</p><div class="exp-cols"><div><b>تحتاج:</b><ul>${EXPERIMENT.tools.map(x => `<li>${x}</li>`).join('')}</ul></div><div><b>الخطوات:</b><ol>${EXPERIMENT.steps.map(x => `<li>${x}</li>`).join('')}</ol></div></div>
 <div class="eggs" aria-hidden="true"><div class="egg"><span class="shell"></span><small>ماء</small></div><div class="egg vin"><span class="shell"></span><small>خل</small></div><div class="egg vin paste"><span class="shell"></span><small>معجون ثم خل</small></div></div>
 <p class="fact"><b>النتيجة المتوقعة:</b> ${EXPERIMENT.result}</p><p class="safe">⚠️ ${EXPERIMENT.safety}</p><details><summary>أسئلة للنقاش</summary><ol>${EXPERIMENT.qs.map(q => `<li>${q}</li>`).join('')}</ol></details></article>`;
 const teacher = `<div class="tg"><div class="tg-list">${decks.map((d, i) => `<a class="dlc" href="assets/sessions/session-${i + 1}.pdf" download><b>${SESSION_NAMES[i + 1].split(' (')[0]}</b><span>العرض التقديمي (PDF)</span></a>`).join('')}
@@ -150,8 +166,8 @@ const sFaq = `<div class="faq">${FAQ.map(([q, a, who]) => `<details><summary>${q
 const ch = T.chart;
 const TT = `<svg viewBox="-62 -92 124 180" aria-hidden="true">${A.tooth({ mouth: 'smile' })}</svg>`;
 const sTrack = `<p class="hint">اضغط على السن مرة ليصبح أخضر (فرّشت)، ومرة ثانية ليصبح أحمر (نسيت). يُحفظ تقدّمك على هذا الجهاز فقط.</p>
-<div class="weeks">${[0, 1, 2, 3].map(w => `<div class="wk"><h4>الأسبوع ${['الأول', 'الثاني', 'الثالث', 'الرابع'][w]}</h4><div class="wrow wh"><span></span><span>☀️ صباحاً</span><span>🌙 مساءً</span></div>${ch.days.map((d, i) => `<div class="wrow"><span>${d}</span>${[0, 1].map(c => `<button class="tc" data-k="${w}-${i}-${c}" aria-label="${d} ${c ? 'مساءً' : 'صباحاً'}، الأسبوع ${w + 1}">${TT}</button>`).join('')}</div>`).join('')}</div>`).join('')}</div>
-<div class="chart-sum"><span><b id="chG">0</b> سن أخضر · <b id="chR">0</b> سن أحمر من 56</span><button class="btn ghost" id="chReset">مسح الجدول</button><a class="btn ghost" href="assets/chart/poster.pdf" download>⬇ الجدول الورقي للطباعة</a></div>
+<div class="weeks">${[0].map(w => `<div class="wk"><h2>أسبوع التحدّي</h2><div class="wrow wh"><span></span><span>☀️ صباحاً</span><span>🌙 مساءً</span></div>${ch.days.map((d, i) => `<div class="wrow"><span>${d}</span>${[0, 1].map(c => `<button class="tc" data-k="${w}-${i}-${c}" aria-label="${d} ${c ? 'مساءً' : 'صباحاً'}">${TT}</button>`).join('')}</div>`).join('')}</div>`).join('')}</div>
+<div class="chart-sum"><span><b id="chG">0</b> سن أخضر · <b id="chR">0</b> سن أحمر من 14</span><button class="btn ghost" id="chReset">مسح الجدول</button><a class="btn ghost" href="assets/chart/poster.pdf" download>⬇ الجدول الورقي للطباعة</a></div>
 <div class="cert-box"><div class="cert-form"><h3>🏅 شهادة بطل الأسنان النظيفة</h3><p>اكتب اسمك وصفّك، وستُكتب الشهادة بعدد الأسنان الخضراء التي جمعتها.</p>
 <label for="cName">اسم الطالب</label><input id="cName" maxlength="40" placeholder="مثال: سالم بن محمد">
 <label for="cGrade">الصف</label><select id="cGrade"><option>الخامس</option><option selected>السادس</option><option>السابع</option></select>
@@ -167,18 +183,19 @@ const DL = [
   ['العروض بصيغة PowerPoint', [...decks.map((d, i) => [SESSION_NAMES[i + 1].split(' (')[0], `assets/sessions/session-${i + 1}.pptx`, 'عرض PowerPoint']), ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pptx', 'عرض PowerPoint']]],
   ['أدلة المعلم والممرض', [['دليل الجلسات التوعوية', 'assets/sessions/facilitator-booklet.pdf', 'دليل PDF'], ['دليل الأنشطة الإضافية', 'assets/sessions/activities-guide.pdf', 'دليل PDF'], ['شرائح إضافية للعروض', 'assets/sessions/extra-slides.pdf', 'عرض PDF']]],
   ['الملصقات الجدارية', TOPICS.map(t => [t.title, `assets/${t.slug}/poster.pdf`, 'ملصق A4'])],
-  ['الإنفوجرافيك', TOPICS.map(t => [t.title, `assets/${t.slug}/infographic-pdf.pdf`, 'إنفوجرافيك PDF'])],
+  ['الإنفوجرافيك', IG.map(([f, t]) => [t, `assets/infographics/${f}.pdf`, 'إنفوجرافيك PDF'])],
   ['مواد للطباعة', [['ملصقات الحائط', 'assets/print/wall-posters.pdf', 'PDF'], ['دفتر التلوين: سالم وحمد', 'assets/print/coloring-book.pdf', 'PDF'], ['ملصقات الطلاب', 'assets/print/stickers.pdf', 'PDF'], ['جدول التفريش الورقي', 'assets/chart/poster.pdf', 'PDF']]],
 ];
-const dlTable = `<div class="dlt">${DL.map(([g, rows]) => `<table><caption>${g}</caption><thead><tr><th>الملف</th><th>النوع</th><th>الحجم</th><th></th></tr></thead><tbody>${rows.filter(([, p]) => fs.existsSync(`${SITE}/${p}`)).map(([n, p, ty]) => `<tr><td>${n}</td><td>${ty}</td><td>${size(p)}</td><td><a class="sbtn" href="${p}" download>⬇ تحميل</a></td></tr>`).join('')}</tbody></table>`).join('')}</div>`;
+const dlTable = `<div class="dlt">${DL.map(([g, rows]) => `<table><caption>${g}</caption><thead><tr><th>الملف</th><th>النوع</th><th>الحجم</th><th><span class="sr-only">تحميل</span></th></tr></thead><tbody>${rows.filter(([, p]) => fs.existsSync(`${SITE}/${p}`)).map(([n, p, ty]) => `<tr><td>${n}</td><td>${ty}</td><td>${size(p)}</td><td><a class="sbtn" href="${p}" download>⬇ تحميل</a></td></tr>`).join('')}</tbody></table>`).join('')}</div>`;
 
 // ---------- pages ----------
 const PAGES = [
-  { f: 'games.html', nav: 'الألعاب', who: 's', icon: '🎮', title: 'الاختبارات والألعاب', sub: 'اختبر عاداتك، والعب، وتعلّم بالتجربة', body: () => `<nav class="jump" aria-label="ألعاب الصفحة">${[['care-quiz', 'هل تعتني بأسنانك؟'], ['food-game', 'اختر الغذاء الصحيح'], ['germ-game', 'اصطاد السوسة'], ['brushing', 'التفريش ومؤقت الدقيقتين'], ['myths', 'صح أم خطأ؟'], ['breath', 'المحقّق سنّون'], ['injury', 'الإسعاف السريع']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sQuiz + sFood + sGerm + sBrush + sMyth + sMatch + sOrder}` },
-  { f: 'mouth.html', nav: 'خريطة الفم', who: 's', icon: '🦷', title: 'خريطة الفم والأسئلة الشائعة', sub: 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', body: () => `<section class="blk">${sMap}</section><section class="blk"><h2 class="bh">اسأل الطبيب: الأسئلة الشائعة</h2>${sFaq}</section>` },
-  { f: 'challenge.html', nav: 'التحدي والشهادة', who: 's', icon: '🏆', title: 'تحدّي التفريش وشهادة البطل', sub: 'تحدّي 28 يوماً للتفريش صباحاً ومساءً، ثم شهادتك', body: () => `<section class="blk tr">${sTrack}</section>` },
-  { f: 'library.html', nav: 'الفيديوهات والإنفوجرافيك', who: 's', icon: '🎬', title: 'الفيديوهات والإنفوجرافيك', sub: 'شاهد الفيديوهات وتصفّح الإنفوجرافيك عن صحة الفم والأسنان', body: () => `<section class="blk">${sLib}</section>` },
-  { f: 'teachers.html', nav: 'ركن المعلم والممرض', who: 't', hidden: true, icon: '🧑‍🏫', title: 'ركن المعلم والممرض المدرسي', sub: 'قصص وتجربة للورش، وخطة الأنشطة، وكل الملفات في جدول واحد', body: () => `<section class="blk"><h2 class="bh">قصص قصيرة للنقاش</h2><div class="stories">${stories}</div></section><section class="blk">${exp}</section><section class="blk"><h2 class="bh">الأنشطة المقترحة لكل جلسة</h2><div class="tg-table"><table><thead><tr><th>النشاط</th><th>الجلسة</th><th>المدة</th><th>الهدف</th></tr></thead><tbody>${TOPICS.map(t => `<tr><td>${ACT[t.slug].name}</td><td>${ACT[t.slug].sessions.join(' و')}</td><td>${ACT[t.slug].time}</td><td>${ACT[t.slug].goal}</td></tr>`).join('')}</tbody></table></div></section><section class="blk"><h2 class="bh">الملصقات الجدارية للطباعة</h2>${sPosters}</section><section class="blk" id="files"><h2 class="bh">الملفات للتحميل</h2>${dlTable}</section>` },
+  { f: 'quiz.html', nav: 'الاختبارات', who: 's', icon: 'quiz', title: 'الاختبارات', sub: 'اختبر عاداتك ومعلوماتك عن صحة الفم والأسنان', body: () => `<nav class="jump" aria-label="اختبارات الصفحة">${[['care-quiz', 'هل تعتني بأسنانك؟'], ['myths', 'صح أم خطأ؟']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sQuiz + sMyth}` },
+  { f: 'games.html', nav: 'الألعاب', who: 's', icon: 'games', title: 'الألعاب', sub: 'العب، وتعلّم بالتجربة', body: () => `<nav class="jump" aria-label="ألعاب الصفحة">${[['food-game', 'اختر الغذاء الصحيح'], ['germ-game', 'اصطاد السوسة'], ['brushing', 'التفريش ومؤقت الدقيقتين'], ['breath', 'المحقّق سنّون'], ['injury', 'الإسعاف السريع']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sFood + sGerm + sBrush + sMatch + sOrder}` },
+  { f: 'mouth.html', nav: 'خريطة الفم', who: 's', icon: 'mouth', title: 'خريطة الفم والأسئلة الشائعة', sub: 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', body: () => `<section class="blk">${sMap}</section><section class="blk"><h2 class="bh">اسأل الطبيب: الأسئلة الشائعة</h2>${sFaq}</section>` },
+  { f: 'challenge.html', nav: 'التحدي والشهادة', who: 's', icon: 'challenge', title: 'تحدّي التفريش وشهادة البطل', sub: 'تحدّي 7 أيام للتفريش صباحاً ومساءً، ثم شهادتك', body: () => `<section class="blk tr">${sTrack}</section>` },
+  { f: 'library.html', nav: 'الفيديوهات والإنفوجرافيك', who: 's', icon: 'library', title: 'الفيديوهات والإنفوجرافيك', sub: 'شاهد الفيديوهات وتصفّح الإنفوجرافيك عن صحة الفم والأسنان', body: () => `<section class="blk">${sLib}</section>` },
+  { f: 'teachers.html', nav: 'ركن المعلم والممرض', who: 't', hidden: true, icon: 'teachers', title: 'ركن المعلم والممرض المدرسي', sub: 'قصص وتجربة للورش، وخطة الأنشطة، وكل الملفات في جدول واحد', body: () => `<section class="blk"><h2 class="bh">قصص قصيرة للنقاش</h2><div class="stories">${stories}</div></section><section class="blk">${exp}</section><section class="blk"><h2 class="bh">الأنشطة المقترحة لكل جلسة</h2><div class="tg-table"><table><thead><tr><th>النشاط</th><th>الجلسة</th><th>المدة</th><th>الهدف</th></tr></thead><tbody>${TOPICS.map(t => `<tr><td>${ACT[t.slug].name}</td><td>${ACT[t.slug].sessions.join(' و')}</td><td>${ACT[t.slug].time}</td><td>${ACT[t.slug].goal}</td></tr>`).join('')}</tbody></table></div></section><section class="blk"><h2 class="bh">الملصقات الجدارية للطباعة</h2>${sPosters}</section><section class="blk" id="files"><h2 class="bh">الملفات للتحميل</h2>${dlTable}</section>` },
 ];
 
 const DATA = {
@@ -186,7 +203,7 @@ const DATA = {
   myths: my.myths.map(([k, m, f]) => ({ ic: ico(k), q: m, f })),
   brush: br.items.map(([k, h, p]) => ({ ic: ico(k), h, p })),
   pairs: PAIRS, order: inj.items.map(([k, h, p]) => ({ ic: ico(k), h, p })),
-  salem: `data:image/svg+xml;base64,${Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-110 -380 220 400" width="440" height="800">${A.boy({ mouth: 'grin', r: wave })}</svg>`).toString('base64')}`,
+  salem: 'assets/characters/salem.webp',
   tooth: `data:image/svg+xml;base64,${Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200" width="400" height="400">${A.tooth({ mouth: 'grin', sparkle: true, arms: [[[-46, -6], [-80, -40]], [[46, -6], [80, -40]]], feet: true })}</svg>`).toString('base64')}`,
   credit: CREDIT,
 };
@@ -194,28 +211,38 @@ const DATA = {
 
 const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}">
-<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/habits/infographic.png">
+<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/infographics/oral-health-tips-infographic.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css"></head><body>
+<link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/lenis.css"><link rel="stylesheet" href="assets/motion.css"><script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('mo');setTimeout(function(){document.documentElement.classList.remove('mo')},3000)}</script></head><body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>`;
 const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
-<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">ابتسامتي صحتي</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
+<nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">صحة الفم والأسنان</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
 const FOOT = `<footer><p>${CREDIT}</p><p class="sm"><a class="staff" href="teachers.html">ركن المعلم والممرض المدرسي</a></p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
-<script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script></body></html>`;
+<script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script><script src="assets/motion.js" defer></script></body></html>`;
 const fix = h => h.replace(/font-family=(\\?")(?:Cairo|Lalezar|Tajawal)[^"\\]*\1/g, (m, q) => `font-family=${q}'Times New Roman', Times, Amiri, serif${q}`);
-const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${p.icon}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
-const home = `${HEAD('ابتسامتي صحتي', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
-<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>ابتسامتي صحتي</h1>
+// line icons for the page cards and the "other pages" links (replacing emoji); stroke follows the text colour
+const PIC = {
+  quiz: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 11.5l2 2 4-4M8.5 17h7"/>',
+  games: '<path d="M6.5 8h11a4 4 0 0 1 3.9 4.8l-.9 4.3a2.2 2.2 0 0 1-3.9.9L15 16H9l-1.6 2a2.2 2.2 0 0 1-3.9-.9l-.9-4.3A4 4 0 0 1 6.5 8Z"/><path d="M8 11v3M6.5 12.5h3"/><circle cx="15.5" cy="11.5" r=".6"/><circle cx="17.5" cy="13.5" r=".6"/>',
+  mouth: '<path d="M7 3.5c-2.6 0-4 2.2-3.6 5 .3 2.3 1.4 3.8 1.8 6.3.4 2.6.8 5.7 2.5 5.7 1.6 0 1.5-4.5 4.3-4.5s2.7 4.5 4.3 4.5c1.7 0 2.1-3.1 2.5-5.7.4-2.5 1.5-4 1.8-6.3.4-2.8-1-5-3.6-5-1.9 0-3 1.1-5 1.1s-3.1-1.1-5-1.1Z"/>',
+  challenge: '<path d="M8 4h8v5a4 4 0 0 1-8 0V4ZM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M9.5 17h5v3h-5z"/>',
+  library: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9Z"/>',
+  teachers: '<circle cx="8" cy="7" r="3"/><path d="M3 20v-2.5A4.5 4.5 0 0 1 7.5 13h1A4.5 4.5 0 0 1 13 17.5V20M14 4h7v8h-7M16 15l2.5-3"/>',
+};
+const pic = k => `<svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PIC[k]}</svg>`;
+const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${pic(p.icon)}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
+const home = `${HEAD('صحة الفم والأسنان', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
+<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>صحة الفم والأسنان</h1>
 <div class="hero-cta"><a class="btn" href="games.html">ابدأ اللعب</a><a class="btn ghost" href="challenge.html">تحدّي التفريش</a></div></div>
-<div class="hero-art"><span class="h-h">${hamad()}</span><span class="h-t">${sinnoon()}</span><span class="h-s">${salem()}</span></div></section>
+<div class="hero-art hero-pic"><img src="assets/characters/salem-hamad-apart.webp" width="900" height="579" alt="سالم وحمد يذاكران على الطاولة، وسنّون بينهما"><span class="h-t">${sinnoon()}</span></div></section>
 <section class="hgroup" id="students"><div class="hgrid">${PAGES.filter(p => !p.hidden).map(card).join('')}</div></section>
 </main>${FOOT}`;
 fs.writeFileSync(`${SITE}/index.html`, fix(home));
 for (const p of PAGES) {
-  const html = `${HEAD(`${p.title} · ابتسامتي صحتي`, p.sub)}${TOP(p.f)}
+  const html = `${HEAD(`${p.title} · صحة الفم والأسنان`, p.sub)}${TOP(p.f)}
 <main id="main"><div class="ph"><a class="crumb" href="./">الرئيسية</a><h1>${p.title}</h1><p>${p.sub}</p></div>
 ${p.body()}
-<nav class="next" aria-label="صفحات أخرى">${PAGES.filter(q => q !== p && !q.hidden).map(q => `<a href="${q.f}">${q.icon} ${q.nav}</a>`).join('')}</nav></main>${FOOT}`;
+<nav class="next" aria-label="صفحات أخرى">${PAGES.filter(q => q !== p && !q.hidden).map(q => `<a href="${q.f}">${pic(q.icon)}${q.nav}</a>`).join('')}</nav></main>${FOOT}`;
   fs.writeFileSync(`${SITE}/${p.f}`, fix(html));
 }
 cp(`${HERE}/site-style.css`, `${SITE}/assets/style.css`);
