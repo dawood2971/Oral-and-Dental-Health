@@ -329,3 +329,4 @@ a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,
 .next a{display:inline-flex;align-items:center;gap:8px;min-height:44px}.next a .pic{width:20px;height:20px;flex:none}
 .wk h2{background:var(--c1);color:#fff;text-align:center;font-family:var(--f);font-weight:700;padding:4px;font-size:var(--t-s)}
 .stc h3,.exp h3{font-family:var(--fh);font-weight:700;font-size:23px;margin-bottom:4px}
+#cqTips .cq-th{list-style:none;font-weight:700;color:var(--c3);margin-inline-start:-1.2em;margin-bottom:4px}

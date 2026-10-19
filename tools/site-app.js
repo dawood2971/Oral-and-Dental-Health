@@ -18,11 +18,11 @@
       const sc = ans.reduce((a, b) => a + b, 0), max = D.quiz.length * 2;
       $('#cqBar').style.width = '100%';
       ['#cqN', '#cqQ', '#cqOpts'].forEach(s => $(s).hidden = true); $('#cqRes').hidden = false;
-      const lvl = sc >= 15 ? ['🏆 أنت بطل الأسنان!', 'عاداتك ممتازة، استمر وعلّمها لأصدقائك.', 'grin'] : sc >= 10 ? ['👍 عاداتك جيدة', 'ينقصك القليل لتصبح بطلاً. ابدأ بالنصائح التالية.', 'smile'] : ['💪 تحتاج إلى خطة', 'لا تقلق، كل بطل بدأ بخطوة. اختر نصيحة واحدة وطبّقها من اليوم.', 'o'];
+      const lvl = sc >= 15 ? ['🏆 أنت بطل الأسنان!', 'عاداتك ممتازة، استمر وعلّمها لأصدقائك.', 'grin'] : sc >= 10 ? ['👍 عاداتك جيدة', 'ينقصك القليل لتصبح بطلاً. ابدأ بالنصائح التالية.', 'smile'] : ['💪 تحتاج إلى خطة', 'لا تقلق، كل بطل بدأ بخطوة. خطتك جاهزة في الأسفل.', 'o'];
       $('#cqTitle').textContent = lvl[0]; $('#cqScore').textContent = `نتيجتك ${sc} من ${max}. ${lvl[1]}`;
-      $('#cqFace').innerHTML = (sc >= 10 ? $('#tplToothHappy') : $('#tplToothSad')).innerHTML;
+      const face = sc >= 10 ? $('#tplToothHappy') : $('#tplToothSad'); $('#cqFace').innerHTML = face ? face.innerHTML : '';
       const tips = D.quiz.filter((q, k) => ans[k] < 2).map(q => `<li>${esc(q.tip)}</li>`);
-      $('#cqTips').innerHTML = tips.length ? tips.join('') : '<li>لا توجد نقاط ضعف. ممتاز!</li>';
+      $('#cqTips').innerHTML = (tips.length ? `<li class="cq-th">${sc >= 10 ? 'نصائح لتصبح بطلاً:' : 'خطتك: اختر نصيحة من هذه النصائح وطبّقها من اليوم'}</li>` + tips.join('') : '<li>لا توجد نقاط ضعف. ممتاز!</li>');
     };
     $('#cqAgain').onclick = () => { i = 0; ans.length = 0; ['#cqN', '#cqQ', '#cqOpts'].forEach(s => $(s).hidden = false); $('#cqRes').hidden = true; show(); };
     show();

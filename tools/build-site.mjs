@@ -37,6 +37,8 @@ const wave = [[60, -212], [104, -262], [114, -330]];
 const salem = () => `<img src="assets/characters/salem.webp" width="320" height="696" alt="" aria-hidden="true">`;
 const hamad = () => `<img src="assets/characters/hamad.webp" width="257" height="700" alt="" aria-hidden="true">`;
 const sinnoon = (m = 'grin', o = {}) => `<svg viewBox="-100 -100 200 200" aria-hidden="true">${A.tooth({ mouth: m, sparkle: m !== 'sad', arms: [[[-46, -6], [-80, -40]], [[46, -6], [80, -40]]], feet: true, ...o })}</svg>`;
+// tooth faces cloned by the food game (games.html) and the care-quiz result (quiz.html)
+const TPL_TOOTH = `<template id="tplToothHappy">${sinnoon('grin')}</template><template id="tplToothSad">${sinnoon('sad', { cavity: true, sad: true })}</template>`;
 const T = Object.fromEntries([...TOPICS, ...MINI].map(t => [t.slug, t]));
 const food = { milk: A.laban(), cheese: A.cheese(), apple: A.apple(), carrot: A.carrot(), cucumber: A.cucumber(), yogurt: A.yogurt(), water: A.waterBottle(), banana: A.banana(), candy: A.candy(), soda: A.soda(), donut: A.donut(), chips: A.chips(), lollipop: A.lollipop() };
 const foodSvg = k => `<svg viewBox="-80 -100 160 200" aria-hidden="true">${food[k]}</svg>`;
@@ -54,7 +56,7 @@ const sFood = block('food-game', '--bg:#fff6e5;--c1:#e08a00;--c2:#ffe2a8;--c3:#9
 <div class="fg"><div class="fg-top"><span>⏱ <b id="fgTime">30</b></span><span>النقاط: <b id="fgScore">0</b></span><span>أفضل نتيجة: <b id="fgBest">0</b></span></div>
 <div class="fg-stage"><div class="fg-tooth" id="fgTooth">${sinnoon('grin')}</div><div class="fg-food" id="fgFood"><button class="btn" id="fgStart">ابدأ اللعبة</button></div></div>
 <div class="fg-btns"><button class="btn ok" id="fgGood" disabled>يقوّي سنّي 💪</button><button class="btn no" id="fgBad" disabled>يضرّ سنّي ⚠️</button></div><p class="fg-msg" id="fgMsg" aria-live="polite"></p></div>
-<template id="tplToothHappy">${sinnoon('grin')}</template><template id="tplToothSad">${sinnoon('sad', { cavity: true, sad: true })}</template>`);
+${TPL_TOOTH}`);
 
 const germCell = `<button class="gc" aria-label="سن"><span class="gt">${`<svg viewBox="-62 -92 124 180" aria-hidden="true">${A.tooth({ mouth: 'smile' })}</svg>`}</span><span class="gg">${`<svg viewBox="-70 -70 140 140" aria-hidden="true">${A.germ()}</svg>`}</span></button>`;
 const sGerm = block('germ-game', '--bg:#eef9ec;--c1:#3c9a2e;--c2:#d3f1cc;--c3:#26701c', `${H('', 'لعبة', 'اصطاد السوسة', 'الجراثيم تظهر على الأسنان! اضغط عليها بسرعة قبل أن تسبب التسوّس')}
@@ -190,7 +192,7 @@ const dlTable = `<div class="dlt">${DL.map(([g, rows]) => `<table><caption>${g}<
 
 // ---------- pages ----------
 const PAGES = [
-  { f: 'quiz.html', nav: 'الاختبارات', who: 's', icon: 'quiz', title: 'الاختبارات', sub: 'اختبر عاداتك ومعلوماتك عن صحة الفم والأسنان', body: () => `<nav class="jump" aria-label="اختبارات الصفحة">${[['care-quiz', 'هل تعتني بأسنانك؟'], ['myths', 'صح أم خطأ؟']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sQuiz + sMyth}` },
+  { f: 'quiz.html', nav: 'الاختبارات', who: 's', icon: 'quiz', title: 'الاختبارات', sub: 'اختبر عاداتك ومعلوماتك عن صحة الفم والأسنان', body: () => `<nav class="jump" aria-label="اختبارات الصفحة">${[['care-quiz', 'هل تعتني بأسنانك؟'], ['myths', 'صح أم خطأ؟']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sQuiz + sMyth}${TPL_TOOTH}` },
   { f: 'games.html', nav: 'الألعاب', who: 's', icon: 'games', title: 'الألعاب', sub: 'العب، وتعلّم بالتجربة', body: () => `<nav class="jump" aria-label="ألعاب الصفحة">${[['food-game', 'اختر الغذاء الصحيح'], ['germ-game', 'اصطاد السوسة'], ['brushing', 'التفريش ومؤقت الدقيقتين'], ['breath', 'المحقّق سنّون'], ['injury', 'الإسعاف السريع']].map(([a, b]) => `<a href="#${a}">${b}</a>`).join('')}</nav>${sFood + sGerm + sBrush + sMatch + sOrder}` },
   { f: 'mouth.html', nav: 'خريطة الفم', who: 's', icon: 'mouth', title: 'خريطة الفم والأسئلة الشائعة', sub: 'اكتشف أجزاء فمك، واقرأ إجابات مبسّطة عن أكثر الأسئلة تكراراً', body: () => `<section class="blk">${sMap}</section><section class="blk"><h2 class="bh">اسأل الطبيب: الأسئلة الشائعة</h2>${sFaq}</section>` },
   { f: 'challenge.html', nav: 'التحدي والشهادة', who: 's', icon: 'challenge', title: 'تحدّي التفريش وشهادة البطل', sub: 'تحدّي 7 أيام للتفريش صباحاً ومساءً، ثم شهادتك', body: () => `<section class="blk tr">${sTrack}</section>` },
