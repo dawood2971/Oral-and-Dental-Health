@@ -226,6 +226,10 @@
   };
   drawCert();
   $('#cMake').onclick = async () => {
+    // a certificate needs the student's name: say so next to the field instead of printing dots
+    const nm = $('#cName'), msg = $('#cNameMsg');
+    if (!nm.value.trim()) { if (msg) msg.textContent = 'اكتب اسم الطالب أولاً، ثم اضغط «أنشئ الشهادة».'; nm.setAttribute('aria-invalid', 'true'); nm.focus(); return; }
+    if (msg) msg.textContent = ''; nm.removeAttribute('aria-invalid');
     await drawCert();
     try { $('#cDl').href = cv.toDataURL('image/png'); $('#cDl').hidden = false; } catch { }
     $('#cPrint').hidden = false; $('#cMake').textContent = 'حدّث الشهادة';
@@ -236,4 +240,7 @@
     setTimeout(() => { window.print(); setTimeout(() => { img.remove(); document.body.classList.remove('printing'); }, 500); }, 150);
   };
   }
+  // phones: the section links scroll sideways, so bring the current page's link into view
+  const cur = document.querySelector('.links a[aria-current="page"]');
+  if (cur && cur.parentElement.scrollWidth > cur.parentElement.clientWidth) cur.scrollIntoView({ block: 'nearest', inline: 'center' });
 })();

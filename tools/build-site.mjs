@@ -110,7 +110,7 @@ for (const [f] of IG) {
   cp(`${MAT}/infographics/${f}.pdf`, `${SITE}/assets/infographics/${f}.pdf`);
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', `${MAT}/infographics/${f}.png`, '-vf', 'scale=1240:-2', '-q:v', '3', `${SITE}/assets/infographics/${f}.jpg`]);
 }
-const igGallery = IG.map(([f, t]) => `<figure class="ig"><a href="assets/infographics/${f}.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/infographics/${f}.jpg" alt="إنفوجرافيك: ${t}"></a><figcaption><b>${t}</b><span class="acts"><a class="sbtn" href="assets/infographics/${f}.jpg" download>⬇ صورة</a><a class="sbtn" href="assets/infographics/${f}.pdf" download>⬇ PDF</a><button class="sbtn share" data-url="assets/infographics/${f}.jpg" data-title="${t}">↗ مشاركة</button></span></figcaption></figure>`).join('');
+const igGallery = IG.map(([f, t]) => `<figure class="ig"><a href="assets/infographics/${f}.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/infographics/${f}.jpg" width="1240" height="${f === 'weekly-brushing-chart' ? 876 : 1754}" alt="إنفوجرافيك: ${t}"></a><figcaption><b>${t}</b><span class="acts"><a class="sbtn" href="assets/infographics/${f}.jpg" download>⬇ صورة</a><a class="sbtn" href="assets/infographics/${f}.pdf" download>⬇ PDF</a><button class="sbtn share" data-url="assets/infographics/${f}.jpg" data-title="${t}">↗ مشاركة</button></span></figcaption></figure>`).join('');
 const EXTRA_DIR = process.argv[5] || '/mnt/project-files/library/moph';
 const EXTRA = [
   { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
@@ -171,9 +171,9 @@ const sTrack = `<p class="hint">اضغط على السن مرة ليصبح أخ�
 <div class="weeks">${[0].map(w => `<div class="wk"><h2>أسبوع التحدّي</h2><div class="wrow wh"><span></span><span>☀️ صباحاً</span><span>🌙 مساءً</span></div>${ch.days.map((d, i) => `<div class="wrow"><span>${d}</span>${[0, 1].map(c => `<button class="tc" data-k="${w}-${i}-${c}" aria-label="${d} ${c ? 'مساءً' : 'صباحاً'}">${TT}</button>`).join('')}</div>`).join('')}</div>`).join('')}</div>
 <div class="chart-sum"><span><b id="chG">0</b> سن أخضر · <b id="chR">0</b> سن أحمر من 14</span><button class="btn ghost" id="chReset">مسح الجدول</button><a class="btn ghost" href="assets/chart/poster.pdf" download>⬇ الجدول الورقي للطباعة</a></div>
 <div class="cert-box"><div class="cert-form"><h3>🏅 شهادة بطل الأسنان النظيفة</h3><p>اكتب اسمك وصفّك، وستُكتب الشهادة بعدد الأسنان الخضراء التي جمعتها.</p>
-<label for="cName">اسم الطالب</label><input id="cName" maxlength="40" placeholder="مثال: سالم بن محمد">
-<label for="cGrade">الصف</label><select id="cGrade"><option>الخامس</option><option selected>السادس</option><option>السابع</option></select>
-<label for="cSchool">المدرسة (اختياري)</label><input id="cSchool" maxlength="50">
+<label for="cName">اسم الطالب</label><input id="cName" name="student-name" autocomplete="off" maxlength="40" placeholder="مثال: سالم بن محمد…" aria-describedby="cNameMsg"><p class="field-msg" id="cNameMsg" aria-live="polite"></p>
+<label for="cGrade">الصف</label><select id="cGrade" name="grade"><option>الخامس</option><option selected>السادس</option><option>السابع</option></select>
+<label for="cSchool">المدرسة (اختياري)</label><input id="cSchool" name="school" autocomplete="off" maxlength="50">
 <div class="cert-btns"><button class="btn" id="cMake">أنشئ الشهادة</button><a class="btn ghost" id="cDl" download="شهادة-بطل-الأسنان.png" hidden>⬇ تنزيل الصورة</a><button class="btn ghost" id="cPrint" hidden>🖨 طباعة</button></div></div>
 <div class="cert-prev"><canvas id="cCanvas" width="1600" height="1131" aria-label="معاينة الشهادة"></canvas></div></div>`;
 
@@ -211,13 +211,13 @@ const DATA = {
 };
 
 
-const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+const HEAD = (title, desc) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff">
 <title>${title}</title><meta name="description" content="${desc}">
 <meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="assets/infographics/oral-health-tips-infographic.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/lenis.css"><link rel="stylesheet" href="assets/motion.css"><script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('mo');setTimeout(function(){document.documentElement.classList.remove('mo')},3000)}</script></head><body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>`;
-const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
+const TOP = active => `<header class="top"><div class="lh"><img src="assets/letterhead.jpg" width="1299" height="249" alt="وزارة الصحة · المديرية العامة للخدمات الصحية بمحافظة الظاهرة"></div>
 <nav class="bar" aria-label="أقسام الموقع"><div class="bar-in"><a class="brand" href="./">صحة الفم والأسنان</a><div class="links">${[['./', 'الرئيسية'], ...PAGES.filter(p => !p.hidden || p.f === active).map(p => [p.f, p.nav])].map(([h, n]) => `<a href="${h}"${h === active ? ' aria-current="page"' : ''}>${n}</a>`).join('')}</div></div></nav></header>`;
 const FOOT = `<footer><p>${CREDIT}</p><p class="sm"><a class="staff" href="teachers.html">ركن المعلم والممرض المدرسي</a></p><p class="sm">برنامج تعزيز صحة الفم والأسنان في المجتمع المدرسي · نوفمبر 2026</p></footer>
 <script>window.DATA=${JSON.stringify(DATA)}</script><script src="assets/app.js"></script><script src="assets/motion.js" defer></script></body></html>`;

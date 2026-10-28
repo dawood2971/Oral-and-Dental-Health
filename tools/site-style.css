@@ -330,3 +330,15 @@ a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,
 .wk h2{background:var(--c1);color:#fff;text-align:center;font-family:var(--f);font-weight:700;padding:4px;font-size:var(--t-s)}
 .stc h3,.exp h3{font-family:var(--fh);font-weight:700;font-size:23px;margin-bottom:4px}
 #cqTips .cq-th{list-style:none;font-weight:700;color:var(--c3);margin-inline-start:-1.2em;margin-bottom:4px}
+/* web-design-guidelines pass: shorter sticky bar on phones, scroll hint on the section links, tap feedback, clearer form errors */
+@media (max-width:600px){.bar .brand{display:none}.bar .links{-webkit-mask-image:linear-gradient(to left,#000 85%,transparent);mask-image:linear-gradient(to left,#000 85%,transparent);scroll-snap-type:x proximity}.bar .links a{scroll-snap-align:start}}
+[id]{scroll-margin-top:72px}
+a,button,summary,select,.opt,.tab,[role=button]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn,.sbtn,.opt,.tab,.hc,.jump a,.next a{transition-property:transform,background-color,border-color,box-shadow,color;transition-duration:.15s}
+.btn:hover,.sbtn:hover,.tab:hover{filter:brightness(.95)}
+.btn:active,.sbtn:active,.opt:active,.tab:active,.hc:active,.jump a:active,.next a:active{transform:scale(.97)}
+.tab{min-height:44px}
+h1,h2,h3{text-wrap:balance}
+select{background-color:#fff;color:var(--ink)}
+.field-msg{margin:4px 0 0;min-height:0;color:var(--no);font-weight:700;font-size:var(--t-s)}.field-msg:empty{display:none}
+input[aria-invalid=true]{border-color:var(--no);outline:2px solid var(--no);outline-offset:1px}
