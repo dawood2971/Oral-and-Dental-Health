@@ -45,6 +45,7 @@ export const IC = {
   force: () => teethRow(g(-40, -40, 0.5, A.toothbrush(), -40) + `<path d="M-90,-90 l30,20 M-70,-100 l20,30" stroke="${A.PAL.red}" stroke-width="7" stroke-linecap="round"/>`),
   baby: () => g(-40, 0, 0.6, A.tooth({ mouth: 'smile' })) + g(40, 24, 0.42, A.tooth({ mouth: 'smile' })),
   calendar: () => `<rect x="-70" y="-70" width="140" height="140" rx="16" fill="#fff" ${S(6)}/><rect x="-70" y="-70" width="140" height="40" rx="16" fill="${A.PAL.red}" ${S(6)}/><text x="0" y="52" text-anchor="middle" font-family="Cairo, Tajawal" font-weight="900" font-size="78" fill="${INK}">6</text>`,
+  calendar7: () => `<rect x="-70" y="-70" width="140" height="140" rx="16" fill="#fff" ${S(6)}/><rect x="-70" y="-70" width="140" height="40" rx="16" fill="${A.PAL.red}" ${S(6)}/><text x="0" y="52" text-anchor="middle" font-family="Cairo, Tajawal" font-weight="900" font-size="78" fill="${INK}">7</text>`,
   lemon: () => ban(`<ellipse cx="-22" cy="-16" rx="36" ry="27" fill="${f('banana')}" ${S(4)}/><path d="M14,-16 l9,-4 l0,8 Z" fill="${f('banana')}" ${S(3)}/><rect x="6" y="8" width="44" height="50" rx="7" fill="#fff" ${S(4)}/><text x="28" y="40" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="14" fill="${INK}">صودا</text>`),
   // bad breath
   mouthwash: () => `<rect x="-22" y="-92" width="44" height="24" rx="5" fill="${f('red')}" ${S(4)}/><path d="M-22,-68 Q-50,-56 -50,-30 L-50,70 Q-50,84 -36,84 L36,84 Q50,84 50,70 L50,-30 Q50,-56 22,-68 Z" fill="#c8f2e6" ${S(4)}/><rect x="-36" y="-10" width="72" height="50" rx="8" fill="#fff" ${S(3)}/><path d="M-24,14 L24,14" ${S(3)}/>` + `<text x="72" y="-50" font-family="Cairo" font-weight="900" font-size="34" fill="${A.PAL.blue}">?</text>`,
@@ -132,17 +133,17 @@ export const TOPICS = [
     question: 'أي معلومة فاجأتك أكثر؟',
   },
   {
-    id: '4-jadwal-at-tafreesh', slug: 'chart', keys: [['28','يوماً'],['56','سنّاً تلوّنه'],['2','مرتان كل يوم']], n: 4, short: 'تحدّي الأسابيع الأربعة', title: 'تحدّي التفريش: 4 أسابيع',
+    id: '4-jadwal-at-tafreesh', slug: 'chart', keys: [['7','أيام'],['14','سنّاً تلوّنه'],['2','مرتان كل يوم']], n: 4, short: 'تحدّي الأيام السبعة', title: 'تحدّي التفريش: 7 أيام',
     sub: 'لوّن السن بالأخضر إذا فرّشت، وبالأحمر إذا نسيت', vars: '--bg:#eaf7ef;--c1:#2a9d8f;--c2:#c7f0dd;--c3:#1b6f65',
     session: 2, from: 'جدول «أسنانك عنوان صحتك» الأسبوعي',
     days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
     items: [
       ['sunmoon', 'صباحاً ومساءً', 'خانة بعد الإفطار وخانة قبل النوم.'],
       ['chart', 'أخضر أو أحمر', 'أخضر إذا فرّشت، أحمر إذا نسيت. كن صادقاً!'],
-      ['calendar', '28 يوماً', 'من الجلسة الثانية حتى ما بعد الجلسة الخامسة.'],
-      ['dentist', 'توقيع ولي الأمر', 'يوقّع في نهاية كل أسبوع، وتسلّمه للسفير.'],
+      ['calendar7', '7 أيام', 'تبدأ بعد الجلسة الثانية وتنتهي قبل الجلسة الثالثة.'],
+      ['dentist', 'توقيع ولي الأمر', 'يوقّع في نهاية الأسبوع، وتسلّمه للسفير.'],
     ],
-    question: 'كم سناً أخضر جمعت هذا الأسبوع؟',
+    question: 'كم سناً أخضر جمعت في أسبوع التحدّي؟',
   },
   {
     id: '5-raihat-al-fam', slug: 'breath', keys: [['2×','تفريش يومياً'],['1','مرة خيط يومياً'],['2','زيارتان للطبيب سنوياً']], n: 5, short: 'رائحة الفم الكريهة', title: 'كيف أمنع رائحة الفم الكريهة؟',

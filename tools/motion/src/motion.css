@@ -1,0 +1,10 @@
+/* Motion layer styles. Lenis replaces native smooth scrolling while it runs. */
+html.lenis{scroll-behavior:auto}
+/* Until motion.js takes over, sections that will fade in stay hidden (html.mo is set in <head> only when motion is allowed). */
+html.mo:not(.motion-ready) :is(.ph,main .blk,.hgrid .hc,nav.next a){opacity:0}
+.hero{position:relative;isolation:isolate}
+.hero-rays{position:absolute;inset:-32px -16px 0;z-index:-1;pointer-events:none;-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent);mask-image:linear-gradient(to bottom,#000 55%,transparent)}
+.hero h1>span{justify-content:inherit}
+.cta-star{display:contents}
+.hero-cta .star-border.btn{padding:10px 26px;border:0;font-weight:700;font-size:var(--t-m);box-shadow:var(--sh)}
+.count-num{display:inline-block;text-align:center;font-variant-numeric:tabular-nums}

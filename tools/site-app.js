@@ -18,11 +18,11 @@
       const sc = ans.reduce((a, b) => a + b, 0), max = D.quiz.length * 2;
       $('#cqBar').style.width = '100%';
       ['#cqN', '#cqQ', '#cqOpts'].forEach(s => $(s).hidden = true); $('#cqRes').hidden = false;
-      const lvl = sc >= 15 ? ['🏆 أنت بطل الأسنان!', 'عاداتك ممتازة، استمر وعلّمها لأصدقائك.', 'grin'] : sc >= 10 ? ['👍 عاداتك جيدة', 'ينقصك القليل لتصبح بطلاً. ابدأ بالنصائح التالية.', 'smile'] : ['💪 تحتاج إلى خطة', 'لا تقلق، كل بطل بدأ بخطوة. اختر نصيحة واحدة وطبّقها من اليوم.', 'o'];
+      const lvl = sc >= 15 ? ['🏆 أنت بطل الأسنان!', 'عاداتك ممتازة، استمر وعلّمها لأصدقائك.', 'grin'] : sc >= 10 ? ['👍 عاداتك جيدة', 'ينقصك القليل لتصبح بطلاً. ابدأ بالنصائح التالية.', 'smile'] : ['💪 تحتاج إلى خطة', 'لا تقلق، كل بطل بدأ بخطوة. خطتك جاهزة في الأسفل.', 'o'];
       $('#cqTitle').textContent = lvl[0]; $('#cqScore').textContent = `نتيجتك ${sc} من ${max}. ${lvl[1]}`;
-      $('#cqFace').innerHTML = (sc >= 10 ? $('#tplToothHappy') : $('#tplToothSad')).innerHTML;
+      const face = sc >= 10 ? $('#tplToothHappy') : $('#tplToothSad'); $('#cqFace').innerHTML = face ? face.innerHTML : '';
       const tips = D.quiz.filter((q, k) => ans[k] < 2).map(q => `<li>${esc(q.tip)}</li>`);
-      $('#cqTips').innerHTML = tips.length ? tips.join('') : '<li>لا توجد نقاط ضعف. ممتاز!</li>';
+      $('#cqTips').innerHTML = (tips.length ? `<li class="cq-th">${sc >= 10 ? 'نصائح لتصبح بطلاً:' : 'خطتك: اختر نصيحة من هذه النصائح وطبّقها من اليوم'}</li>` + tips.join('') : '<li>لا توجد نقاط ضعف. ممتاز!</li>');
     };
     $('#cqAgain').onclick = () => { i = 0; ans.length = 0; ['#cqN', '#cqQ', '#cqOpts'].forEach(s => $(s).hidden = false); $('#cqRes').hidden = true; show(); };
     show();
@@ -212,7 +212,7 @@
     c2.strokeStyle = '#1f8fbf'; c2.lineWidth = 18; c2.strokeRect(30, 30, W - 60, Hh - 60);
     c2.strokeStyle = '#ffd23f'; c2.lineWidth = 6; c2.strokeRect(58, 58, W - 116, Hh - 116);
     if (lh) { const h = 150, w = lh.width * h / lh.height; c2.drawImage(lh, (W - w) / 2, 80, w, h); }
-    if (sl) c2.drawImage(sl, 85, 760, 160, 291);
+    if (sl) c2.drawImage(sl, 85, 750, 300 * sl.width / sl.height, 300);
     if (to) c2.drawImage(to, W - 310, 830, 200, 200);
     c2.direction = 'rtl'; c2.textAlign = 'center'; c2.fillStyle = '#1d1d1f';
     c2.font = '700 104px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#1f6fb2'; c2.fillText('شهادة بطل الأسنان النظيفة', W / 2, 360, 1080);
@@ -220,12 +220,16 @@
     c2.font = '700 84px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#1f6fb2'; c2.fillText(name, W / 2, 580, 1080);
     c2.fillStyle = '#1d1d1f'; c2.font = '700 40px "Times New Roman", Times, Amiri, serif'; c2.fillText(`الصف ${grade}${school ? ' · ' + school : ''}`, W / 2, 650, 1080);
     c2.fillText('هذه الشهادة تقديراً لالتزامه بتفريش أسنانه صباحاً ومساءً', W / 2, 730, 1080);
-    c2.font = '700 46px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#2a9d8f'; c2.fillText(`جمع ${green} سنّاً أخضر من 56 في تحدّي الأسابيع الأربعة`, W / 2, 810, 1080);
+    c2.font = '700 46px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#2a9d8f'; c2.fillText(`جمع ${green} سنّاً أخضر من 14 في تحدّي الأيام السبعة`, W / 2, 810, 1080);
     c2.fillStyle = '#1d1d1f'; c2.font = '700 30px "Times New Roman", Times, Amiri, serif'; c2.fillText('توقيع ولي الأمر: ................        الممرض المدرسي: ................', W / 2, 920, 1080);
     c2.font = '700 26px "Times New Roman", Times, Amiri, serif'; c2.fillStyle = '#4a5560'; c2.fillText(D.credit, W / 2, 1040, 1080);
   };
   drawCert();
   $('#cMake').onclick = async () => {
+    // a certificate needs the student's name: say so next to the field instead of printing dots
+    const nm = $('#cName'), msg = $('#cNameMsg');
+    if (!nm.value.trim()) { if (msg) msg.textContent = 'اكتب اسم الطالب أولاً، ثم اضغط «أنشئ الشهادة».'; nm.setAttribute('aria-invalid', 'true'); nm.focus(); return; }
+    if (msg) msg.textContent = ''; nm.removeAttribute('aria-invalid');
     await drawCert();
     try { $('#cDl').href = cv.toDataURL('image/png'); $('#cDl').hidden = false; } catch { }
     $('#cPrint').hidden = false; $('#cMake').textContent = 'حدّث الشهادة';
@@ -236,4 +240,7 @@
     setTimeout(() => { window.print(); setTimeout(() => { img.remove(); document.body.classList.remove('printing'); }, 500); }, 150);
   };
   }
+  // phones: the section links scroll sideways, so bring the current page's link into view
+  const cur = document.querySelector('.links a[aria-current="page"]');
+  if (cur && cur.parentElement.scrollWidth > cur.parentElement.clientWidth) cur.scrollIntoView({ block: 'nearest', inline: 'center' });
 })();
