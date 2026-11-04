@@ -76,30 +76,29 @@ export const builders = {
   },
 };
 
-// Weekly chart: A4 landscape, 4 weeks.
+// Weekly chart: A4 landscape, one week (7 days × morning/evening).
 export function chartPage(t) {
-  const tooth = k => `<svg viewBox="-60 -90 120 175" style="width:8mm;height:11mm">${A.tooth({ mouth: 'smile' }).replace(/fill="#ffffff"/, 'fill="#fff"')}</svg>`;
-  const wk = w => `<div class="wk"><div class="wh">الأسبوع ${['الأول', 'الثاني', 'الثالث', 'الرابع'][w]}</div>
-    <div class="row hd2"><span></span><span>${'<svg viewBox="-80 -80 160 160" style="width:7mm;height:7mm">' + A.sun(0, 0, 0.9) + '</svg>'}صباحاً</span><span>${'<svg viewBox="-80 -80 160 160" style="width:7mm;height:7mm">' + A.moon(0, 0, 1.2) + '</svg>'}مساءً</span></div>
-    ${t.days.map(d => `<div class="row"><span class="d">${d}</span><span>${tooth()}</span><span>${tooth()}</span></div>`).join('')}
-    <div class="sig">توقيع ولي الأمر: ..................</div></div>`;
+  const tooth = () => `<svg viewBox="-60 -90 120 175" style="width:17mm;height:24mm">${A.tooth({ mouth: 'smile' }).replace(/fill="#ffffff"/, 'fill="#fff"')}</svg>`;
+  const icon = (k, s) => `<svg viewBox="-80 -80 160 160" style="width:9mm;height:9mm">${k === 'sun' ? A.sun(0, 0, s) : A.moon(0, 0, s)}</svg>`;
+  const row = (k, s, label) => `<div class="row"><span class="tm">${icon(k, s)}${label}</span>${t.days.map(() => `<span>${tooth()}</span>`).join('')}</div>`;
+  const wk = `<div class="wk"><div class="row hd2"><span></span>${t.days.map(d => `<span>${d}</span>`).join('')}</div>${row('sun', 0.9, 'صباحاً')}${row('moon', 1.2, 'مساءً')}
+    <div class="sig"><span>عدد الأسنان الخضراء: ........ من 14</span><span>توقيع ولي الأمر: ..................</span></div></div>`;
   const css = `@page{size:297mm 210mm;margin:0}.land{width:297mm;height:210mm;position:relative;overflow:hidden;background:var(--bg)}
   .land .lh{height:20mm}.land .lh img{height:14mm}
   .land .hd{top:20mm;height:24mm;padding-top:2mm;border-radius:0 0 10mm 10mm}.land .hd h1{font-size:26pt}.land .hd p{font-size:12pt;margin-top:0}
-  .name{position:absolute;top:47mm;right:12mm;left:12mm;display:flex;gap:8mm;font-family:Cairo;font-weight:800;font-size:12.5pt}
-  .weeks{position:absolute;top:56mm;bottom:17mm;left:10mm;right:10mm;display:flex;gap:5mm}
+  .name{position:absolute;top:49mm;right:12mm;left:12mm;display:flex;gap:8mm;font-family:Cairo;font-weight:800;font-size:12.5pt}
+  .weeks{position:absolute;top:60mm;bottom:20mm;left:10mm;right:10mm;display:flex}
   .wk{flex:1;background:#fff;border:.8mm solid ${INK};border-radius:5mm;box-shadow:1mm 1mm 0 ${INK};overflow:hidden;display:flex;flex-direction:column}
-  .wh{background:var(--c1);color:#fff;text-align:center;font-family:Cairo;font-weight:900;font-size:13pt;border-bottom:.7mm solid ${INK}}
-  .row{display:grid;grid-template-columns:1.2fr 1fr 1fr;align-items:center;justify-items:center;border-bottom:.3mm solid #bbb;flex:1}
-  .row.hd2{flex:none;background:var(--c2);font-family:Cairo;font-weight:800;font-size:10pt}.row.hd2 span{display:flex;align-items:center;gap:1mm}
-  .d{font-family:Cairo;font-weight:800;font-size:11pt;justify-self:start;padding-right:2mm}
-  .sig{font-size:9.5pt;font-weight:700;padding:1.5mm 2mm;background:#fafafa}
-  .key{position:absolute;bottom:14.5mm;left:0;right:0;text-align:center;font-family:Cairo;font-weight:800;font-size:10.5pt}
+  .row{display:grid;grid-template-columns:1.25fr repeat(7,1fr);align-items:center;justify-items:center;border-bottom:.3mm solid #bbb;flex:1}
+  .row>span+span{border-right:.3mm solid #ddd;align-self:stretch;display:flex;align-items:center;justify-content:center;width:100%}
+  .row.hd2{flex:none;background:var(--c1);color:#fff;font-family:Cairo;font-weight:900;font-size:12pt;padding:1.5mm 0;border-bottom:.7mm solid ${INK}}
+  .tm{display:flex;flex-direction:column;align-items:center;gap:1mm;font-family:Cairo;font-weight:800;font-size:12pt;background:var(--c2);align-self:stretch;justify-content:center;width:100%}
+  .sig{display:flex;justify-content:space-between;font-size:11pt;font-weight:700;padding:2.5mm 5mm;background:#fafafa}
   .land .ft{height:12mm}`;
   const sw = c => `<span style="display:inline-block;width:5mm;height:4mm;border-radius:1mm;vertical-align:middle;border:.4mm solid ${INK};background:${c}"></span>`;
   return { css, page: `<div class="land poster" style="${t.vars}"><div class="lh"><img src="${LOGO}"></div><div class="hd"><h1>${t.title}</h1><p>لوّن السن ${sw(A.PAL.green)} بالأخضر إذا فرّشت أسنانك، و${sw(A.PAL.red)} بالأحمر إذا نسيت</p></div>
   <div class="name"><span>اسم الطالب: ..............................</span><span>الصف: ..........</span><span>تاريخ البدء: ..........</span></div>
-  <div class="weeks">${[3, 2, 1, 0].reverse().map(wk).join('')}</div>${foot()}</div>` };
+  <div class="weeks">${wk}</div>${foot()}</div>` };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
