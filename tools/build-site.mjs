@@ -116,6 +116,8 @@ const EXTRA = [
   { slug: 'reduce-sugar', file: 'video-10-reduce-sugar.mp4', title: 'قلّل السكريات وحافظ على صحة فمك', who: 'للطلاب' },
   { slug: 'role-model', file: 'video-11-be-a-role-model.mp4', title: 'كن قدوة لأطفالك', who: 'للأسر' },
   { slug: 'healthy-diet', file: 'video-12-healthy-diet.mp4', title: 'غذاء صحي، ابتسامة مشرقة', who: 'للطلاب', cover: 21 },
+  { slug: 'mouth-gateway', file: 'video-14-mouth-gateway.mp4', title: 'صحة الفم بوابتك إلى صحة جسمك', who: 'للطلاب', cover: 3 },
+  { slug: 'keep-mouth-healthy', file: 'video-13-keep-mouth-healthy.mp4', title: 'حافظ على صحة فمك لحياة صحية', who: 'للطلاب', cover: 15 },
 ].filter(v => fs.existsSync(`${EXTRA_DIR}/${v.file}`));
 for (const v of EXTRA) {
   fs.mkdirSync(`${SITE}/assets/${v.slug}`, { recursive: true });
