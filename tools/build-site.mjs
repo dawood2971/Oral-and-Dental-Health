@@ -234,9 +234,11 @@ const PIC = {
   teachers: '<circle cx="8" cy="7" r="3"/><path d="M3 20v-2.5A4.5 4.5 0 0 1 7.5 13h1A4.5 4.5 0 0 1 13 17.5V20M14 4h7v8h-7M16 15l2.5-3"/>',
 };
 const pic = k => `<svg class="pic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PIC[k]}</svg>`;
-const card = p => `<a class="hc" href="${p.f}"><span class="hc-i" aria-hidden="true">${pic(p.icon)}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span><span class="hc-go" aria-hidden="true">←</span></a>`;
+// the challenge card is the wide one and shows the 7 days of the chart (morning and evening dots)
+const DAYS = `<span class="hc-days" aria-hidden="true"><i class=on><em>1</em></i><i class=on><em>2</em></i><i class=on><em>3</em></i><i><em>4</em></i><i><em>5</em></i><i><em>6</em></i><i><em>7</em></i></span>`;
+const card = p => `<a class="hc${p.icon === 'challenge' ? ' wide' : ''}" href="${p.f}"><span class="hc-i" aria-hidden="true">${pic(p.icon)}</span><span class="hc-t"><b>${p.title}</b><span>${p.sub}</span></span>${p.icon === 'challenge' ? DAYS : ''}<span class="hc-go" aria-hidden="true">←</span></a>`;
 const home = `${HEAD('صحة الفم والأسنان', 'صفحة توعية تفاعلية بصحة الفم والأسنان للطلاب والمعلمين والأسر')}${TOP('./')}
-<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>صحة الفم والأسنان</h1>
+<main id="main"><section class="hero"><div class="hero-t"><span class="kick">قسم تعزيز الصحة · برنامج الصحة المدرسية والجامعية</span><h1>صحة الفم والأسنان</h1><p class="lede">تعلّم العناية بأسنانك بالألعاب والاختبارات، ثم خُض تحدّي التفريش 7 أيام</p>
 <div class="hero-cta"><a class="btn" href="games.html">ابدأ اللعب</a><a class="btn ghost" href="challenge.html">تحدّي التفريش</a></div></div>
 <div class="hero-art hero-pic"><img src="assets/characters/salem-hamad-apart.webp" width="900" height="579" alt="سالم وحمد يذاكران على الطاولة، وسنّون بينهما"><span class="h-t">${sinnoon()}</span></div></section>
 <section class="hgroup" id="students"><div class="hgrid">${PAGES.filter(p => !p.hidden).map(card).join('')}</div></section>

@@ -28,7 +28,7 @@ if (!reduced) {
 }
 
 // ---------- hero: title, light rays, main button ----------
-const hero = document.querySelector('.hero');
+const hero = document.querySelector('.hero[data-fx]') // hero effects off: the drawing is the one bright element;
 if (hero) {
   const h1 = hero.querySelector('h1');
   if (h1 && !reduced) {

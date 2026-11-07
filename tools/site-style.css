@@ -342,3 +342,29 @@ h1,h2,h3{text-wrap:balance}
 select{background-color:#fff;color:var(--ink)}
 .field-msg{margin:4px 0 0;min-height:0;color:var(--no);font-weight:700;font-size:var(--t-s)}.field-msg:empty{display:none}
 input[aria-invalid=true]{border-color:var(--no);outline:2px solid var(--no);outline-offset:1px}
+/* home polish 2026-11-07: quiet chrome, the drawing is the one bright element, 4px rhythm */
+.hero{padding:40px 0 16px;gap:32px}
+.hero .kick{display:block;background:none;border:0;border-radius:0;padding:0;font-weight:500;font-size:var(--t-xs);color:#5b6670}
+.hero h1{margin:8px 0 0}
+.hero .lede{margin-top:8px;max-width:30em;font-size:var(--t-m);font-weight:400;color:#4a5560;line-height:1.6}
+.hero-cta{gap:12px;margin-top:24px}
+.hero-cta .btn{padding:12px 24px;border-radius:12px;box-shadow:none}
+.hero-pic .h-t{animation:none}
+.hgroup{margin:32px 0 48px}
+.hgrid{gap:16px;grid-auto-flow:dense}
+.hc{gap:16px;padding:20px;border-radius:16px;box-shadow:0 1px 2px rgba(20,40,60,.05);transition-property:border-color,background-color,transform;transition-duration:.15s;transition-timing-function:cubic-bezier(.2,.7,.2,1)}
+.hc:hover{transform:none;border-color:var(--c1)}
+.hc-i{width:48px;height:48px;border-radius:12px}
+.hc-i .pic{width:24px;height:24px;stroke-width:1.6}
+.hc-t b{font-size:20px;line-height:1.4}
+.hc-t span{margin-top:4px}
+.hc-go{font-size:var(--t-m);color:#8a949c;transition:color .15s}
+.hc:hover .hc-go{color:var(--c1)}
+.hc-days{flex:none;display:flex;gap:6px}
+.hc-days i{width:32px;height:48px;border:1px solid var(--line);border-radius:8px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px 0 4px;font-style:normal}
+.hc-days i::before{content:"";width:10px;height:10px;border-radius:50%;border:1.5px solid var(--line);box-shadow:0 14px 0 -1.5px #fff,0 14px 0 0 var(--line)}
+.hc-days i.on::before{background:var(--c1);border-color:var(--c1);box-shadow:0 14px 0 0 var(--c1)}
+.hc-days em{font-style:normal;font-size:13px;line-height:1;color:#8a949c;font-variant-numeric:tabular-nums}
+@media (min-width:900px){.hgrid{grid-template-columns:repeat(3,1fr)}.hc.wide{grid-column:span 2}}
+@media (min-width:601px) and (max-width:899px){.hgrid{grid-template-columns:repeat(2,1fr)}.hc.wide{grid-column:span 2}}
+@media (max-width:600px){.hero{padding-top:24px}.hc-days{display:none}}
